@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}./index.html`
-      }
+        redirectTo: `${window.location.origin}/index.html`
+      }      
     });
   });
 
@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
     await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${window.location.origin}./index.html`
-      }
+        redirectTo: `${window.location.origin}/index.html`
+      }      
     });
   });
 
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentPath = window.location.pathname;
     const isAuthPage = currentPath.includes("login") || currentPath.includes("signup");
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
 
     if (user && isAuthPage) {
       // Already signed in and on login/signup → redirect to dashboard
