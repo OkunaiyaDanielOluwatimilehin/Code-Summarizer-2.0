@@ -238,3 +238,7 @@ body, html {
 #finish-onboarding:active {
   transform: scale(0.97);
 }
+
+#onboarding-container {
+  display: none;
+}

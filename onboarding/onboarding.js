@@ -9,12 +9,13 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const usernameInput = document.getElementById("fullName");
   const generatedUsernameDisplay = document.getElementById("generated-username-display");
+  const onboardingContainer = document.getElementById("onboarding-container");
 
-  // On load: get logged in user
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+  // 1. Get logged-in user and show a loading state
+  // You can add a simple loading spinner here if you want.
+  onboardingContainer.style.display = 'none';
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
   if (userError || !user) {
     alert("Please log in first.");
@@ -22,10 +23,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // 🔍 1. Check if user is already onboarded
+  // 2. Check if user is already onboarded
   const { data: existingProfile, error: profileFetchError } = await supabase
     .from("profiles")
-    .select("*")
+    .select("onboarded")
     .eq("id", user.id)
     .single();
 
@@ -33,11 +34,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.error("Error fetching profile:", profileFetchError);
   }
 
- // check if already onboarded
-if (existingProfile && existingProfile.onboarded === true) {
-  window.location.href = "/index.html"; // ✅ redirect to homepage
-  return;
-}
+  // 3. Conditional Redirection & Reveal
+  if (existingProfile && existingProfile.onboarded === true) {
+    window.location.href = "/index.html";
+    return;
+  }
+
 
 
   // Generate username based on email or random fallback
