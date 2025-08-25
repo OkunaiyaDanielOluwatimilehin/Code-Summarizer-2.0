@@ -74,28 +74,48 @@ uploadButton.addEventListener("click", async () => {
         throw new Error(data.message || 'Something went wrong on the server.');
       }
 
-      // Display the summary from the API
-      resultBox.innerHTML = `
-        <div class="summary-output">
-          <p>${data.summary}</p>
-        </div>
-      `;
-      resultBox.style.display = "block";
-      resultBox.scrollIntoView({ behavior: "smooth" });
+      const summaryText = data.summary;
 
-    } catch (error) {
-      console.error("Error summarizing code:", error);
-      alert("Error: " + error.message);
-      resultBox.innerHTML = `<p style="color: red;">Failed to get summary. Please try again.</p>`;
-      resultBox.style.display = "block";
-    } finally {
-      // Reset button state
-      uploadButton.textContent = originalButtonText;
-      uploadButton.disabled = false;
-      codeFile.value = ""; // Clear file input for re-upload
-    }
-  };
-  reader.readAsText(file);
+        // ✅ Add copy button and apply styling
+        resultBox.innerHTML = `
+          <div class="summary-output">
+            <p>${summaryText}</p>
+            <button id="copySummaryBtn" class="copy-btn">Copy</button>
+          </div>
+        `;
+
+        resultBox.style.display = "block";
+        resultBox.scrollIntoView({ behavior: "smooth" });
+
+        // ✅ Add event listener for the new copy button
+        const copyBtn = document.getElementById("copySummaryBtn");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", () => {
+            navigator.clipboard.writeText(summaryText)
+              .then(() => {
+                copyBtn.textContent = "Copied!";
+                setTimeout(() => {
+                  copyBtn.textContent = "Copy";
+                }, 2000);
+              })
+              .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert("Failed to copy text.");
+              });
+          });
+        }
+      } catch (error) {
+        console.error("Error summarizing code:", error);
+        alert("Error: " + error.message);
+        resultBox.innerHTML = `<p style="color: red;">Failed to get summary. Please try again.</p>`;
+        resultBox.style.display = "block";
+      } finally {
+        uploadButton.textContent = originalButtonText;
+        uploadButton.disabled = false;
+        codeFile.value = "";
+      }
+    };
+    reader.readAsText(file);
 });
 
 // Reset button after upload
