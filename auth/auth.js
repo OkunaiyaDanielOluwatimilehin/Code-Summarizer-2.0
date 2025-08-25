@@ -75,7 +75,7 @@ async function resetPassword() {
 
   log("resetPassword", email);
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${SITE_ORIGIN}/update-password.html`, // page that sets the new password
+    redirectTo: `${SITE_ORIGIN}/forgot-password.html`, // page that sets the new password
   });
   if (error) return showToast(error.message, true);
   showToast("Reset link sent. Check your email.");
@@ -91,19 +91,18 @@ async function oauth(provider) {
 }
 
 // ---- POST-AUTH ROUTING using profiles.onboarded ----
+// ... (rest of the file) ...
+
 async function redirectAfterAuth() {
   const { data: session } = await supabase.auth.getSession();
   if (!session?.session) {
-    // No session (e.g., email confirmation required). Go to login.
     log("No session after auth; redirecting to login");
-    window.location.href = "/auth/login.html"; // or /login.html
+    window.location.href = "/auth/login.html";
     return;
   }
 
   const uid = session.session.user.id;
 
-  // You MUST have a row-level policy that allows a user to select their own profile.
-  // If you see "permission denied", fix your RLS policy for profiles.
   const { data: profile, error } = await supabase
     .from("profiles")
     .select("onboarded")
@@ -117,10 +116,12 @@ async function redirectAfterAuth() {
     return;
   }
 
+  // ✅ Correct logic: if NOT onboarded, redirect to onboarding.
   if (!profile?.onboarded) {
-    window.location.href = "/index.html";
-  } else {
     window.location.href = "/onboarding/onboarding.html";
+  } else {
+    // ✅ Otherwise, redirect to the home page.
+    window.location.href = "/index.html";
   }
 }
 
