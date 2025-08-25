@@ -1,122 +1,147 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+// --- Module import (works in the browser) ---
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const supabase = createClient(
-  'https://obqmgqzjtvdzmcfvteyn.supabase.co',
-  'sb_publishable_Jjxl5hlVxOj1IeucdHKeXw_noPg319G'
-);
+// ---- CONFIG ----
+const SUPABASE_URL = "https://obqmgqzjtvdzmcfvteyn.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Jjxl5hlVxOj1IeucdHKeXw_noPg319G";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-document.addEventListener('DOMContentLoaded', () => {
-  // === Signup form ===
-  document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
+// ---- UTIL: Toast + Debug ----
+const DBG = true;
+const log = (...a) => DBG && console.log("[auth]", ...a);
+function showToast(msg, isError = false) {
+  const el = document.getElementById("toast");
+  if (!el) return console.error("Toast element missing");
+  el.textContent = msg;
+  el.style.background = isError ? "#e74c3c" : "#2ecc71";
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 3000);
+}
 
-    const email = document.getElementById('signup-email').value.trim();
-    const password = document.getElementById('signup-password').value.trim();
+// ---- PAGE DETECTION (no HTML edits needed) ----
+const PATH = location.pathname.toLowerCase();
+const IS_SIGNUP = PATH.includes("signup");
+const IS_LOGIN = PATH.includes("login");
+const IS_RESET = PATH.includes("forgot") || PATH.includes("reset");
 
-    if (!email || !password) {
-      showToast("Email and password are required.");
-      return;
-    }
+// Grab the first <form> on the page (your pages each have one main form)
+const form = document.querySelector("form");
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password
-    });
+// Common inputs (kept flexible to avoid requiring IDs)
+const emailInput = form?.querySelector('input[type="email"]') || null;
+// For signup page you may have 2 password inputs (password + confirm). We use the first.
+const passwordInput = form?.querySelector('input[type="password"]') || null;
 
-    if (error) {
-      showToast("Error: " + error.message);
-      return;
-    }
+// ---- CORE FLOWS ----
+async function signUpEmail() {
+  if (!emailInput || !passwordInput) return showToast("Missing form inputs", true);
 
-    showToast("Signup successful! Redirecting...");
-    setTimeout(() => {
-      window.location.href = "/onboarding/onboarding.html";
-    }, 1500);
-  });
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
 
-  // === Login form ===
-  document.getElementById('login-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value.trim();
-
-    if (!email || !password) {
-      showToast("Email and password are required.");
-      return;
-    }
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      showToast("Login failed: " + error.message);
-      return;
-    }
-
-    showToast("Login successful! Redirecting...");
-    setTimeout(() => {
-      window.location.href = "/summary/summary.html";
-    }, 1500);
-  });
-
-  // === Google OAuth ===
-  document.getElementById('googleSignIn')?.addEventListener('click', async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/index.html`
-      }      
-    });
-  });
-
-  // === GitHub OAuth ===
-  document.getElementById('github-login')?.addEventListener('click', async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo: `${window.location.origin}/index.html`
-      }      
-    });
-  });
-
-  // === Toast utility ===
-  function showToast(message) {
-    const toast = document.getElementById("toast");
-    if (!toast) return;
-
-    toast.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3000);
+  log("signUpEmail", email);
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) {
+    log("signUp error", error);
+    return showToast(error.message, true);
   }
 
-  // === Auto-login redirect (used only on login/signup pages) ===
-  (async () => {
-    const currentPath = window.location.pathname;
-    const isAuthPage = currentPath.includes("login") || currentPath.includes("signup");
+  // Most projects require email confirmation: no session yet.
+  showToast("Check your email to confirm your account.");
+  // After confirm the user will return and log in, so send them to login page.
+  setTimeout(() => (window.location.href = "/auth/login.html"), 600);
+}
 
-    const { data: { session } } = await supabase.auth.getSession();
+async function loginEmail() {
+  if (!emailInput || !passwordInput) return showToast("Missing form inputs", true);
 
-    if (user && isAuthPage) {
-      // Already signed in and on login/signup → redirect to dashboard
-      window.location.href = "/summary/summary.html";
-    }
-  })();
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
 
-  function setupPasswordToggle(passwordInputId, toggleIconId) {
-    const passwordInput = document.getElementById(passwordInputId);
-    const toggleIcon = document.getElementById(toggleIconId);
-
-    toggleIcon.addEventListener('click', () => {
-      const isPasswordVisible = passwordInput.type === 'text';
-      passwordInput.type = isPasswordVisible ? 'password' : 'text';
-      toggleIcon.classList.toggle('fa-eye');
-      toggleIcon.classList.toggle('fa-eye-slash');
-    });
+  log("loginEmail", email);
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) {
+    log("login error", error);
+    return showToast(error.message, true);
   }
 
-  // Initialize toggles for both forms
-  setupPasswordToggle('login-password', 'toggle-login-password');
-  setupPasswordToggle('signup-password', 'toggle-signup-password');
+  showToast("Login successful");
+  await redirectAfterAuth();
+}
+
+async function resetPassword() {
+  if (!emailInput) return showToast("Enter your email", true);
+  const email = emailInput.value.trim();
+
+  log("resetPassword", email);
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${SITE_ORIGIN}/update-password.html`, // page that sets the new password
+  });
+  if (error) return showToast(error.message, true);
+  showToast("Reset link sent. Check your email.");
+}
+
+async function oauth(provider) {
+  log("oauth", provider);
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: OAUTH_REDIRECT }, // optional: onboard directly after OAuth
+  });
+  if (error) showToast(error.message, true);
+}
+
+// ---- POST-AUTH ROUTING using profiles.onboarded ----
+async function redirectAfterAuth() {
+  const { data: session } = await supabase.auth.getSession();
+  if (!session?.session) {
+    // No session (e.g., email confirmation required). Go to login.
+    log("No session after auth; redirecting to login");
+    window.location.href = "/auth/login.html"; // or /login.html
+    return;
+  }
+
+  const uid = session.session.user.id;
+
+  // You MUST have a row-level policy that allows a user to select their own profile.
+  // If you see "permission denied", fix your RLS policy for profiles.
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("onboarded")
+    .eq("id", uid)
+    .single();
+
+  if (error) {
+    log("profiles select error", error);
+    // Fail-safe: send them to onboarding if we can't read the flag.
+    window.location.href = "/onboarding/onboarding.html";
+    return;
+  }
+
+  if (!profile?.onboarded) {
+    window.location.href = "/index.html";
+  } else {
+    window.location.href = "/onboarding/onboarding.html";
+  }
+}
+
+// ---- WIRE UP (no HTML changes required) ----
+window.addEventListener("DOMContentLoaded", () => {
+  log("auth.js loaded", { IS_SIGNUP, IS_LOGIN, IS_RESET, PATH });
+
+  // Form submit binding based on page
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (IS_SIGNUP) return signUpEmail();
+      if (IS_LOGIN) return loginEmail();
+      if (IS_RESET) return resetPassword();
+      showToast("Unknown page context", true);
+    });
+  } else {
+    log("No <form> found on this page.");
+  }
+
+  // Social buttons (optional presence)
+  document.querySelector(".btn.google")?.addEventListener("click", () => oauth("google"));
+  document.querySelector(".btn.github")?.addEventListener("click", () => oauth("github"));
 });

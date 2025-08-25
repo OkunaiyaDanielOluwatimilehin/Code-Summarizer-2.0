@@ -40,7 +40,64 @@ document.addEventListener("DOMContentLoaded", () => {
     uploadBox.classList.add("show");        // show expanded upload box
   });
 
-  // --- File Upload Handling ---
+// --- File Upload Handling ---
+uploadButton.addEventListener("click", async () => {
+  const file = codeFile.files[0];
+  if (!file) {
+    alert("Please select a file first.");
+    return;
+  }
+
+  // Show a loading state
+  const originalButtonText = uploadButton.textContent;
+  uploadButton.textContent = "Processing...";
+  uploadButton.disabled = true;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const fileContent = e.target.result;
+    const resultBox = document.getElementById("resultBox");
+
+    try {
+      // Send the file content to your Vercel serverless function
+      const response = await fetch('/api/summarize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileContent: fileContent }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong on the server.');
+      }
+
+      // Display the summary from the API
+      resultBox.innerHTML = `
+        <div class="summary-output">
+          <p>${data.summary}</p>
+        </div>
+      `;
+      resultBox.style.display = "block";
+      resultBox.scrollIntoView({ behavior: "smooth" });
+
+    } catch (error) {
+      console.error("Error summarizing code:", error);
+      alert("Error: " + error.message);
+      resultBox.innerHTML = `<p style="color: red;">Failed to get summary. Please try again.</p>`;
+      resultBox.style.display = "block";
+    } finally {
+      // Reset button state
+      uploadButton.textContent = originalButtonText;
+      uploadButton.disabled = false;
+      codeFile.value = ""; // Clear file input for re-upload
+    }
+  };
+  reader.readAsText(file);
+});
+
 // Reset button after upload
 uploadButton.addEventListener("click", () => {
   const file = codeFile.files[0];

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login - Your Project</title>
-  <link rel="stylesheet" href="auth.css" />
-  <script src="https://kit.fontawesome.com/1f7c50f8ab.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="auth.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@dicebear/core@4.10.1/dist/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@dicebear/collection-lorelei@4.10.1/dist/lorelei.min.js"></script>
+    <script src="onboarding.js"></script>
+    <link rel="stylesheet" href="style.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
@@ -17,35 +20,52 @@
 </head>
 <body>
   <div class="auth-container">
-    <form class="auth-form" id="login-form"> 
-    <a href="/index.html" class="back-button">← Back to Home</a>
-    
-   
-      <label for="login-email">Email</label>
-      <input type="email" id="login-email" placeholder="Enter your email" required />
-    
-      <label for="login-password">Password</label>
-      <div style="position: relative;">
-        <input type="password" id="login-password" placeholder="Enter password" required />
-        <i class="fa-solid fa-eye" id="toggle-login-password" 
-           style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
-      </div>
-    
-      
-    
-      <button type="submit" class="btn full-width">Log In <i class="fa-solid fa-right-to-bracket"></i></button>
+    <div class="auth-box">
+      <h2>Login</h2>
+      <form>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="Enter your email" required>
+        </div>
+        <div class="input-group password-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+          </div>
+        <p class="toggle-text">
+            Forgot your password? 
+            <a href="forgot-password.html">forgot-password</a>
+        <button type="submit" class="btn primary">Login</button>
+      </form>
 
-      <!-- <div class="oauth-buttons">
-        <button type="button" id="googleSignIn" class="btn oauth-btn google full-width">
-          <i class="fa-brands fa-google"></i> Continue with Google
-        </button>
-        <button type="button" id="github-login" class="btn oauth-btn github full-width">
-          <i class="fa-brands fa-github"></i> Continue with GitHub
-        </button>
-      </div> -->
-      <p>Don't have an account? <a href="/auth/signup.html" class="toggle-link">Sign up here</a></p>
-    </form>
+      <div class="divider"><span>OR</span></div>
+
+      <div class="social-login">
+        <button class="btn google">Continue with Google</button>
+        <button class="btn github">Continue with GitHub</button>
+      </div>
+
+      <p class="toggle-text">
+        Don’t have an account? 
+        <a href="signup.html">Sign Up</a>
+      </p>
+    </div>
   </div>
+  <div id="toast" class="toast"></div>
+  <script>
+    function togglePassword(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+    </script>
+    <script type="module" src="auth.js"></script>
 </body>
-<script type="module" src="auth.js"></script>
 </html>

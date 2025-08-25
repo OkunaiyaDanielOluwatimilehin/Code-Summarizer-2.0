@@ -20,8 +20,9 @@
 </head>
 <body>
   <div class="onboarding-wrapper">
-
-    <!-- Step 1: Username -->
+      <div class="auth-container">
+        <div class="auth-form">
+          <!-- Add an<!-- Step 1: Username -->
     <section class="onboarding-step active" id="step-1">
       <h2>Username</h2>
       <p id="generated-username-display"></p>
@@ -62,17 +63,21 @@
     <section class="onboarding-step" id="step-3">
       <h2>Your preferred programming language?</h2>
       <input type="text" id="language" placeholder="Optional" />
-      <div class="nav-buttons">
-        <button class="back-btn">Back</button>
-        <button class="skip-btn">Skip</button>
-        <button class="next-btn">Next</button>
+          
+          <button id="finish-onboarding" class="btn full-width">Finish Onboarding</button>
+        </div>
       </div>
-    </section>
-  
+    
+      <div id="toast" class="toast"></div>
+      <script type="module" src="onboarding.js"></script>
+    </body>
+    </html>
+    
     <div class="progress-bar">
       <div class="progress-fill" id="progress-fill"></div>
       <div class="progress-text" id="progress-text">Step 1 of 3</div>
     </div>
   </div>    
-</body>
-</html>
+
+
+    
