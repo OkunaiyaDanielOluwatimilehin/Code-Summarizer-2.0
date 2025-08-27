@@ -30,7 +30,6 @@
   <div id="user-guest-actions">  <a href="./auth/login.html" id="loginBtn" class="nav-btn">Login</a>
     <a href="./auth/signup.html" id="signupBtn" class="nav-btn">Sign Up</a>
   </div>
-   
       <div id="user-auth-actions" class ="hidden">
       <div class="user-menu-wrapper"> 
        <!-- Avatar button and greeting -->
@@ -83,25 +82,78 @@
                 
                   <button id="uploadButton" class="btn secondary">Upload & Process</button>
                   <div class="result-box" id="resultBox"></div>
-                </div>                
-
-                <a href="./summary/summary.html" class="mobile-create-btn">+ Create Project</a>
+                  <button id="closeUploadBox" class="close-box"></button>              
+                </div> 
               </div>
           </div>
       </div>
   </section>
 </div>    
-   <!-- Footer -->
-  <footer id="site-footer">
-    <div class="footer-content">
-      <p>&copy; 2025 Code Summarizer. All rights reserved.</p>
-      <ul class="footer-links">
-        <li><a href="./index.html">Home</a></li>
-        <li><a href="./about.html">About</a></li>
-      </ul>
-    </div>
+<section class="counter-section">
+  <div class="counter-content">
+      <div class="counter-display">
+          <span id="companies-counter">0</span><span>+</span>
+      </div>
+      <p>companies across all sectors and industries have used our tool so far!</p>
   </div>
-  </footer> 
+</section>
+
+<section class="faq-section" id="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+      <button class="faq-question">What is Code Summarizer?<span class="arrow">+</span></button>
+      <div class="faq-answer">
+          <p>Code Summarizer is an AI-powered tool that helps developers quickly summarize large blocks of code into easy-to-understand explanations.</p>
+      </div>
+  </div>
+
+  <div class="faq-item">
+      <button class="faq-question">Is it free to use?<span class="arrow">+</span></button>
+      <div class="faq-answer">
+          <p>Yes, the basic version is free. We also offer premium features for advanced summarizations and integrations.</p>
+      </div>
+  </div>
+
+  <div class="faq-item">
+      <button class="faq-question">Which programming languages are supported?<span class="arrow">+</span></button>
+      <div class="faq-answer">
+          <p>Currently, we support popular languages like JavaScript, Python, Java, C++, and more are being added regularly.</p>
+      </div>
+  </div>
+
+  <div class="faq-item">
+      <button class="faq-question">How accurate are the summaries?<span class="arrow">+</span></button>
+      <div class="faq-answer">
+          <p>The summarizer uses advanced AI models trained on multiple codebases. While it's highly accurate for most cases, always review the output for critical tasks.</p>
+      </div>
+  </div>
+  <div class="faq-item">
+      <button class="faq-question">Is my code safe and private?<span class="arrow">+</span></button>
+      <div class="faq-answer">
+          <p>We prioritize your privacy. All code inputs are encrypted, and we do not store your data beyond the summarization session.</p>
+      </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-content">
+      <div class="footer-section logo-section">
+          <p>Simplifying complex code into clear summaries in seconds.</p>
+      </div>
+
+      <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul class="quick-links-horizontal"> <li><a href="index.html">Home</a></li>
+              <li><a href="#">Features</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#faq-section">FAQ</a></li>
+          </ul>
+      </div>
+  </div>
+  <div class="rights"> <p>© 2025 CodeSummarizer. All rights reserved.</p></div>
+</footer>
+
     <script src="https://kit.fontawesome.com/1f7c50f8ab.js" crossorigin="anonymous"></script> 
 </body>
 <script type="module" src="index.js"></script>

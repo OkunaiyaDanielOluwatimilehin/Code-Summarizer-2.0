@@ -1,80 +1,88 @@
+/* --- Global & Reset --- */
 @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
 
-/* Reset default spacing */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
-    font-family: 'League Spartan', sans-serif;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #020024 0%, #0a0a20 50%, #020024 100%); /* Deeper, more atmospheric gradient */
-    overflow-x: hidden; 
+:root {
+  /* Define global color palette */
+  --color-primary: #FF4C4C;
+  --color-dark-bg: #0a0a20;
+  --color-deep-bg: #020024;
+  --color-text-light: white;
+  --color-text-faint: #c0c0c0;
+  --color-accent: #a0a0ff;
+  --color-hover: #e03552;
 }
+
+html, body {
+  font-family: 'League Spartan', sans-serif;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-deep-bg) 0%, var(--color-dark-bg) 50%, var(--color-deep-bg) 100%);
+  overflow-x: hidden;
+  color: var(--color-text-light);
+}
+
 body.summarizer-active .site-footer {
   display: none !important;
 }
 
-/* Fixed navbar */
+/* --- Utilities --- */
+.hidden {
+  display: none !important;
+}
+
+.show {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* --- Animations --- */
+@keyframes slideDown {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink-caret {
+  from, to { border-right-color: transparent }
+  50% { border-right-color: var(--color-accent); }
+}
+
+/* --- Navbar --- */
 #navbar {
-  background-color: transparent;
   position: relative;
   width: 100%;
-  padding: 20px 50px; /* Use this, remove the second padding declaration */
+  padding: 20px 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
 }
 
-/* Group logo and links in one flex container */
 .nav-left {
   display: flex;
   align-items: center;
   gap: 2rem;
 }
-.logo-link{
-  text-decoration: none;
-  color: inherit;
-}
 
-.logo {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.code {
-  font-weight: bold;
-  width: 100%;
-  color: white;
-  font-size: 30px;
-}
-
-.summarizer-line {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  margin-top: 0.2em;
-}
-
-.summarizer {
-  transform: translateY(-100%);
-  opacity: 0;
-  animation: slideDown 1s ease-out 0.5s forwards;
-  color: white;
-  font-size: 14px;
-}
-
+.logo-link { text-decoration: none; color: inherit; }
+.logo { display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; cursor: pointer; }
+.code { font-weight: bold; width: 100%; color: var(--color-text-light); font-size: 30px; }
+.summarizer-line { display: flex; align-items: center; gap: 0.5em; margin-top: 0.2em; }
+.summarizer { transform: translateY(-100%); opacity: 0; animation: slideDown 1s ease-out 0.5s forwards; font-size: 14px; }
 .version {
-  background:#FF4C4C;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-light);
   font-size: 0.5rem;
   padding: 0.2em 0.6em;
   border-radius: 2px;
@@ -83,91 +91,66 @@ body.summarizer-active .site-footer {
   animation: slideInLeft 1s ease-out 1.2s forwards;
 }
 
-/* Animations */
-@keyframes slideDown {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+#user-guest-actions {
+  /* This ensures the buttons are in a row with spacing between them */
+  display: flex;
+  gap: 20px; /* Adjust this value for the desired spacing */
+  align-items: center;
 }
 
-@keyframes slideInLeft {
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
+/* Base styles for the buttons */
 .nav-btn {
-  display: inline-block;
-  padding: 8px 16px;
-  margin-left: 8px;
-  border-radius: 4px;
+  padding: 10px 20px;
+  border-radius: 5px;
   text-decoration: none;
-  font-weight: 500;
-  font-size: 14px;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s ease;
 }
-
-.hidden { display: none; }
 
 #loginBtn {
-  background-color: #FF4C4C;
-  color: white; /* Primary color */
-  width: 150px;
-  text-align: center;
-}
-
-#loginBtn:hover {
-  background-color: F;
+  background-color: transparent;
   color: #fff;
+  border: 1px solid #fff;
 }
 
 #signupBtn {
-  background-color: #FF4C4C;
-  opacity: 90%;
-  width: 150px;
-  border-radius: 3px;
-  color: white;
-  text-align: center;
-  transition: 0,3s ease;
+  background-color: var(--color-primary);
+  color: #fff;
 }
 
 
+#loginBtn:hover{
+  background-color: var(--color-hover);
+  border: none;
+}
+#signupBtn:hover {
+  background-color:var(--color-hover); 
+}
 
-/* Hero Section */
+/* --- Hero Section --- */
 .hero {
-  width: 100%;
-  min-height: 70vh; /* Make it taller */
-  background: linear-gradient(135deg, #020024 0%, #0a0a20 50%, #020024 100%); /* Deeper, more atmospheric gradient */
-  color: white;
+  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 100px 20px;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
 
 .hero-content {
   display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  gap: 30px; /* Reduced gap */
-  max-width: 900px; /* Centered narrow column */
+  flex-direction: column;
+  gap: 30px;
+  max-width: 900px;
   width: 100%;
   align-items: center;
-  text-align: center; /* Center text */
+  text-align: center;
   position: relative;
-  z-index: 1; /* Ensure content is above animation */
-}
-
-.hero-text {
-  flex: none; /* No flex growing */
-  padding: 0; /* No padding right */
+  z-index: 1;
 }
 
 .hero-text h1 {
-  font-size: 6rem; /* Even larger heading */
+  font-size: 6rem;
   margin-bottom: 20px;
   line-height: 1.2;
   opacity: 0;
@@ -175,43 +158,26 @@ body.summarizer-active .site-footer {
   animation: fadeInUp 1s ease-out forwards;
 }
 
-
-
-
-/* Typewriter Effect */
+/* --- Typewriter Effect --- */
 .typewriter-container {
-  height: 1.5em; /* Fixed height to prevent layout shift */
-  margin-bottom: 25px; /* Space between typewriter and paragraph */
+  height: 1.5em;
+  margin-bottom: 25px;
   font-size: 1.8rem;
   font-weight: 500;
-  color: #a0a0ff; /* Light blue/purple for subheading */
-  /* white-space: nowrap; /* Keep text on one line */
-  overflow: hidden; /* Hide overflowing text */
-}
-
-#typewriter-text {
-  /* This element is updated by JS. No border-right here. */
-  box-sizing: border-box;
+  color: var(--color-accent);
+  overflow: hidden;
 }
 
 .typewriter-cursor {
-  border-right: 2px solid transparent; /* This creates the blinking cursor */
+  border-right: 2px solid transparent;
   animation: blink-caret 0.75s step-end infinite;
-  color: #a0a0ff;
-  font-weight: 300;
-  vertical-align: bottom; /* Align cursor to the bottom of the text line */
+  vertical-align: bottom;
 }
-
-@keyframes blink-caret {
-  from, to { border-right-color: transparent }
-  50% { border-right-color: #a0a0ff; }
-}
-
 
 .hero-text p {
   font-size: 1.3rem;
   line-height: 1.6;
-  color: #c0c0c0;
+  color: var(--color-text-faint);
   margin-bottom: 40px;
   opacity: 0;
   transform: translateY(30px);
@@ -221,7 +187,7 @@ body.summarizer-active .site-footer {
 .hero-buttons {
   display: flex;
   gap: 20px;
-  justify-content: center; /* Center buttons */
+  justify-content: center;
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 1s 0.9s ease-out forwards;
@@ -230,6 +196,7 @@ body.summarizer-active .site-footer {
   flex-wrap: wrap;
 }
 
+/* --- Buttons --- */
 .btn {
   padding: 14px 28px;
   text-decoration: none;
@@ -239,18 +206,20 @@ body.summarizer-active .site-footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: 300px;
 }
 
 .btn.primary {
-  background-color: #ff4b5c;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
   border: none;
   box-shadow: 0 5px 15px rgba(255, 75, 92, 0.3);
   cursor: pointer;
 }
 
 .btn.primary:hover {
-  background-color: #e03552;
+  background-color: var(--color-hover);
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(255, 75, 92, 0.4);
 }
@@ -264,31 +233,19 @@ body.summarizer-active .site-footer {
   transform: translateX(5px);
 }
 
-.btn.primary a{
-  color:white;
+.btn.primary a {
+  color: var(--color-text-light);
   text-decoration: none;
   font-size: 18px;
 }
-.btn.primary {
-  width: 100%;
-  max-width: 300px;
-}
 
-
-/* Keyframe animation for fade-in and slide-up */
-@keyframes fadeInUp {
-  to {
-      opacity: 1;
-      transform: translateY(0);
-  }
-}
+/* --- User Actions --- */
 .user-actions {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Avatar button styling */
 .avatar-button {
   display: flex;
   align-items: center;
@@ -296,40 +253,34 @@ body.summarizer-active .site-footer {
   background: none;
   border: none;
   cursor: pointer;
-  color: white;
+  color: var(--color-text-light);
   padding: 6px 10px;
   border-radius: 20px;
 }
 
-.username-label {
-  font-size: 15px;
-  font-weight: 500;
-  color: white;
-}
-.avatar-button i{
-  font-size: 1.8rem;
-  color: white;
-  transition: transform 0.3s ease;
-}
+.username-label { font-size: 15px; font-weight: 500; }
+.avatar-button i { font-size: 1.8rem; color: var(--color-text-light); transition: transform 0.3s ease; }
 
-/* user menu */
+/* --- Dropdown Menu --- */
 .user-dropdown {
   position: absolute;
   right: 0;
   top: 100%;
   margin-top: 10px;
-  background: #ffffff;
+  background: white;
   border: 1px solid #ddd;
   border-radius: 2px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 10px 0;
   min-width: 200px;
   z-index: 999;
-  margin-right: 14px; /* space from scrollbar */
+  margin-right: 14px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }
 
-.user-dropdown.hidden {
-  display: none;
+.user-dropdown.show {
+  opacity: 1;
 }
 
 .user-dropdown .dropdown-header {
@@ -340,19 +291,9 @@ body.summarizer-active .site-footer {
   color: #333;
 }
 
-.dropdown-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.dropdown-menu li {
-  border-top: 1px solid #f0f0f0;
-}
-
-.dropdown-menu li:first-child {
-  border-top: none;
-}
+.dropdown-menu { list-style: none; padding: 0; margin: 0; }
+.dropdown-menu li { border-top: 1px solid #f0f0f0; }
+.dropdown-menu li:first-child { border-top: none; }
 
 .dropdown-menu li a {
   display: block;
@@ -369,104 +310,14 @@ body.summarizer-active .site-footer {
   color: #111;
   font-size: 16px;
 }
-.dropdown-menu i{
+
+.dropdown-menu i {
   font-size: 12px;
   color: black;
   margin-right: 10px;
 }
 
-/* footer */
-.site-footer {
-  background-color: #0a0a20;
-  color: white;
-  padding: 30px 20px;
-  text-align: center;
-}
-
-.footer-content {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 15px;
-  flex-wrap: wrap;
-}
-
-.footer-content p {
-  font-size: 1rem;
-  margin-bottom: 20px;
-  color: white;
-  text-align: center;
-}
-
-.footer-links a {
-  color: #ccc;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-  color: red;
-}
-
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-#userDropdown.hidden {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-#userDropdown.show {
-  display: block;
-  opacity: 1;
-}
-
-
-
-/* Style the button so it looks like a nav item */
-.nav-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 16px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 1rem;
-}
-
-.toast {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background-color: #28a745;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-  z-index: 9999;
-}
-
-.toast.show {
-  opacity: 1;
-}
-
+/* --- Toast Notification --- */
 .toast {
   position: fixed;
   bottom: 30px;
@@ -484,38 +335,23 @@ body.summarizer-active .site-footer {
 .toast.show {
   opacity: 1;
 }
-.hidden {
-  display: none !important;
-}
 
-.show {
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-}
-
-#userDropdown {
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-
-/* Main upload container */
+/* --- Upload Box --- */
 .upload-box {
-  width: 80%;               /* make it much longer */
-  max-width: 900px;         /* limit so it doesn’t stretch too far */
-  margin: 40px auto;        /* center on page */
+  width: 80%;
+  max-width: 900px;
+  margin: 40px auto;
   padding: 30px;
   border: 2px dashed #007bff;
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--color-text-light);
   box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
-  gap: 20px;   
-  display: none; /* hidden by default */
-transition: all 0.3s ease;   
-position: relative;          /* spacing between items */
+  gap: 20px;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .close-btn {
@@ -530,21 +366,11 @@ position: relative;          /* spacing between items */
   cursor: pointer;
   transition: color 0.2s ease;
 }
+.close-btn:hover { color: #000; }
+.upload-box.show { display: block; animation: fadeIn 0.3s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.close-btn:hover {
-  color: #000;
-}
-
-.upload-box.show {
-display: block;
-animation: fadeIn 0.3s ease-in-out;
-}
-/* Upload area text */
-.upload-label {
-  width: 100%;
-  cursor: pointer;
-}
-
+.upload-label { width: 100%; cursor: pointer; }
 .upload-area {
   padding: 40px;
   text-align: center;
@@ -553,78 +379,27 @@ animation: fadeIn 0.3s ease-in-out;
   border: 2px dashed #ccc;
   transition: border-color 0.3s ease;
 }
+.upload-area:hover { border-color: #007bff; }
+.upload-area p { font-size: 18px; margin-bottom: 8px; color: #333; }
+.upload-area span { font-size: 18px; color: #666; }
+.file-input-wrapper { display: flex; align-items: center; gap: 12px; margin-top: 10px; width: 100%; justify-content: center; }
+#codeFile { display: none; }
 
-.upload-area:hover {
-  border-color: #007bff;
-}
-
-.upload-area p {
-  font-size: 18px;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.upload-area span {
-  font-size: 18px;
-  color: #666;
-}
-
-/* File input (styled if needed) */
-/* File input wrapper */
-.file-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 10px;
-  width: 100%;
-  justify-content: center;  /* center it nicely */
-}
-
-/* Hide ugly default file input */
-#codeFile {
-  display: none;
-}
-/* Upload button */
 #uploadButton {
   margin-top: 15px;
-  padding: 12px 32px;   /* make it wide but not full width */
+  padding: 12px 32px;
   font-size: 16px;
   background: #007bff;
-  color: white;
+  color: var(--color-text-light);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
-  align-self: center;   /* centers the button inside the flex container */
+  align-self: center;
 }
+#uploadButton:hover { background: #0056b3; }
 
-#uploadButton:hover {
-  background: #0056b3;
-}
-
-
-/* Result box (hidden by default) */
-.result-box {
-  display: none;  /* stays hidden until JS sets display:block */
-  width: 100%;
-  max-height: 300px;    /* limit height */
-  overflow-y: auto;     /* enable scroll when content overflows */
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background: #f9f9f9;
-  font-family: monospace;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #222;
-}
-.result-box h4 {
-  margin-top: 0;
-  color: #333;
-}
-
-/* Style for the main result box container */
+/* --- Result Box --- */
 #resultBox {
   padding: 2rem;
   background-color: #f7f7f7;
@@ -634,24 +409,22 @@ animation: fadeIn 0.3s ease-in-out;
   position: relative;
 }
 
-/* Style for the summary text */
 .summary-output p {
   font-family: 'Courier New', Courier, monospace;
   font-size: 1rem;
   line-height: 1.6;
-  color: #333; /* Make text darker and more readable */
+  color: #333;
   white-space: pre-wrap;
   word-wrap: break-word;
   margin-bottom: 1rem;
 }
 
-/* Style for the copy button */
 .copy-btn {
   position: absolute;
   top: 1rem;
   right: 1rem;
   background-color: #007bff;
-  color: white;
+  color: var(--color-text-light);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -659,7 +432,155 @@ animation: fadeIn 0.3s ease-in-out;
   font-size: 0.85rem;
   transition: background-color 0.3s ease;
 }
+.copy-btn:hover { background-color: #0056b3; }
 
-.copy-btn:hover {
-  background-color: #0056b3;
+/* --- Counter Section --- */
+.counter-section {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #1a1a3a, #0d0d20);
+  text-align: center;
+}
+.counter-content { max-width: 800px; margin: 0 auto; }
+.counter-display {
+  font-size: 5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--color-primary);
+}
+.counter-display span:last-child { font-size: 3rem; vertical-align: super; }
+.counter-content p { font-size: 1.5rem; line-height: 1.6; color: var(--color-text-faint); }
+
+/* --- FAQ Section --- */
+.faq-section {
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #0d0d20, #1a1a3a);
+  color: var(--color-text-light);
+}
+.faq-section h2 { text-align: center; margin-bottom: 40px; font-size: 3rem; color: var(--color-text-light); }
+.faq-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; }
+.faq-question {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  font-weight: 600;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  color: var(--color-text-light);
+  transition: color 0.3s ease;
+}
+.faq-question:hover { color: var(--color-hover); }
+.arrow { transition: transform 0.3s ease; color: var(--color-text-light); }
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+  margin-top: 5px;
+  font-size: 1.1rem;
+  color: grey;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+.faq-item.active .faq-answer { max-height: 300px; padding-top: 10px; }
+.faq-item.active .arrow { transform: rotate(45deg); }
+
+/* --- Footer --- */
+.site-footer, .footer {
+  background: linear-gradient(135deg, var(--color-deep-bg) 0%, var(--color-dark-bg) 50%, var(--color-deep-bg) 100%);
+  color: var(--color-text-light);
+  padding: 40px 20px;
+  text-align: center;
+}
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 900px;
+  margin: 0 auto 20px auto;
+}
+.footer-section { flex-basis: 30%; margin-bottom: 20px; text-align: left; }
+.footer-section.logo-section { flex-basis: 40%; text-align: center; }
+.footer-section .logo img { height: 50px; margin-bottom: 15px; }
+.footer-section h3 {
+  color: #88c0d0;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+  text-align: center;
+}
+.footer-section p { font-size: 0.9em; line-height: 1.5; color: rgba(255, 255, 255, 0.7); }
+.quick-links-horizontal { list-style: none; padding: 0; display: flex; justify-content: space-around; margin: 0; }
+.quick-links-horizontal li { margin: 0 5px; }
+.quick-links-horizontal a { color: #ecf0f1; text-decoration: none; font-size: 0.95em; transition: color 0.3s ease; }
+.quick-links-horizontal a:hover { color: #4CAF50; }
+.rights {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  margin-top: 20px;
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Style for the close box container */
+.close-box {
+  /* Position it at the top-right corner of its parent element */
+  position: absolute; 
+  top: 20px;
+  right: 15px;
+  
+  /* Styling for the button itself */
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border-radius: 50%; /* Makes it a circle */
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Style for the "X" symbol inside the button */
+.close-box::before {
+  content: '\00D7'; /* The Unicode character for the multiplication sign, which looks like an 'X' */
+  font-size: 24px;
+  color: #555;
+  font-weight: bold;
+}
+
+/* Hover effect */
+.close-box:hover {
+  background-color: #e0e0e0;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+.fade-out {
+  animation: fadeOut 0.3s ease-in-out forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+/* Add a class to hide the upload box with a transition */
+.hidden-transition {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.95);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.show-transition {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
 }

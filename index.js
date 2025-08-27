@@ -163,5 +163,71 @@ closeUploadBox.addEventListener("click", () => {
   resultBox.textContent = "";          // clear old output
   resultBox.style.display = "none";    // hide again
 });
-
 });
+// FAQ toggle functionality
+const faqItems = document.querySelectorAll('.faq-item');
+
+faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+
+    question.addEventListener('click', () => {
+        // Close other open items
+        faqItems.forEach(i => {
+            if (i !== item) {
+                i.classList.remove('active');
+            }
+        });
+
+        // Toggle current item
+        item.classList.toggle('active');
+    });
+});
+
+function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    navLinks.classList.toggle('show');
+}
+
+// --- Counter Animation for Companies ---
+const companiesCounterElement = document.getElementById('companies-counter');
+const targetCount = 100; // The '100+' in "100+ companies"
+const duration = 2000; // milliseconds
+
+const counterObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            animateCounter(companiesCounterElement, targetCount, duration);
+            observer.unobserve(entry.target); // Stop observing once animated
+        }
+    });
+}, { threshold: 0.5 }); // Trigger when 50% of the counter section is visible
+
+// Observe the counter section
+const counterSection = document.querySelector('.counter-section');
+if (counterSection) {
+    counterObserver.observe(counterSection);
+}
+
+function animateCounter(element, target, duration) {
+    let start = 0;
+    const increment = target / (duration / 16); // ~60 frames per second
+
+    const animate = () => {
+        start += increment;
+        if (start < target) {
+            element.textContent = Math.ceil(start);
+            requestAnimationFrame(animate);
+        } else {
+            element.textContent = target; // Ensure it ends exactly on target
+        }
+    };
+    animate();
+}
+// Function that opens the box
+function openUploadBox() {
+  // Your existing code to make the box visible
+  uploadBox.classList.remove("hidden");
+  
+  // This is the specific line you need to add to scroll
+  uploadBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
