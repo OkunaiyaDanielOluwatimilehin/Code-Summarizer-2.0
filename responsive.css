@@ -1,3 +1,7 @@
+#user-auth-actions {
+    display: flex;
+  }
+
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
     /* --- Navbar --- */
@@ -29,49 +33,13 @@
       font-size: 0.4rem;
       padding: 0.1em 0.5em;
     }
-  
-    /* --- Default (Desktop) Styles --- */
-/* Ensure the navbar is always a flex container */
-#navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* Add padding if not already present */
-    padding: 20px 50px;
-  }
-  
-  /* User actions are managed by JS, but this ensures a clean base state */
+
+    /* This will show the user menu in the nav on mobile when logged in */
   #user-auth-actions {
     display: flex;
   }
   
-  /* --- Mobile Responsiveness --- */
-  @media (max-width: 768px) {
-    /* Keep the main navbar as a flex row on mobile */
-    /* #navbar {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px; /* Adjust padding for mobile */
-    }
-  
-    /* .nav-left {
-      display: flex;
-      align-items: center;
-    } 
-   */
-    /* This is the key rule: Hide the login/signup buttons on mobile */
-    #user-guest-actions {
-      display: none !important;
-    }
-  
-    /* This will show the user menu in the nav on mobile when logged in */
-    #user-auth-actions {
-      display: flex;
-    }
-  }
-  
-    /* --- Hero Section --- */
+   /* --- Hero Section --- */
     .hero {
       padding: 60px 20px;
     }
