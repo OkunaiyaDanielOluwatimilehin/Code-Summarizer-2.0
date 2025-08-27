@@ -1,131 +1,214 @@
+/* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
+    /* --- Navbar --- */
+    #navbar {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px 20px;
+      gap: 15px;
+    }
+  
+    .nav-left {
+      width: 100%;
+      justify-content: space-between;
+    }
+  
+    .logo {
+      align-items: center;
+    }
+  
+    .code {
+      font-size: 24px;
+    }
+  
+    .summarizer {
+      font-size: 12px;
+    }
+  
+    .version {
+      font-size: 0.4rem;
+      padding: 0.1em 0.5em;
+    }
+  
+    #user-guest-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  
+    /* --- Hero Section --- */
+    .hero {
+      padding: 60px 20px;
+    }
+  
     .hero-text h1 {
+        font-size: 3rem;
+        line-height: 1.2; /* Ensures text wraps correctly */
+      }
+    
+      .typewriter-container {
+        font-size: 1.2rem;
+        height: auto; /* Change from fixed height to auto */
+        margin-bottom: 20px;
+        white-space: normal; /* Allows text to wrap to a new line */
+      }
+    
+      .hero-text p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-top: 0;
+      }
+  
+    .hero-buttons {
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    .btn {
+      width: 100%;
+      max-width: 100%;
+    }
+  
+    /* --- Buttons --- */
+    .btn.primary {
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+    
+    /* Hide the "Get Started" button initially on mobile */
+    .btn.primary#getStartedBtn {
+      display: none !important;
+    }
+  
+    /* Show the "Sign In" and "Sign Up" buttons */
+    #loginBtn,
+    #signupBtn {
+      display: block;
+    }
+  
+    /* --- Upload Box --- */
+    .upload-box {
+      width: 95%;
+      padding: 20px;
+    }
+  
+    .upload-area {
+      padding: 20px;
+    }
+  
+    .upload-area p,
+    .upload-area span {
+      font-size: 16px;
+    }
+  
+    .file-input-wrapper {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    /* --- Counter Section --- */
+    .counter-section {
+      padding: 40px 20px;
+    }
+  
+    .counter-display {
+      font-size: 3rem;
+    }
+  
+    .counter-display span:last-child {
       font-size: 2rem;
     }
   
-    .typewriter-container {
-      font-size: 1.2rem;
-    }
-  
-    .hero-text p {
+    .counter-content p {
       font-size: 1rem;
     }
   
-    #getStartedButton,
-    .dropdown-menu,
-    #userName{  
-      display: none !important;
+    /* --- FAQ Section --- */
+    .faq-section h2 {
+      font-size: 2rem;
     }
-
-    #userDropdown{
-        background: none !important;
-        border: none !important;
-        color: none !important;
+  
+    .faq-question {
+      font-size: 1.1rem;
     }
+  
+    .faq-answer {
+      font-size: 1rem;
+    }
+  
+    /* --- Footer --- */
+    .footer-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .footer-section {
+      flex-basis: 100%;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  
+    .footer-section.logo-section {
+      flex-basis: 100%;
+    }
+  
+    .quick-links-horizontal {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .rights {
+      text-align: center;
+    }
+  }
 
-    .avatar-button:hover .icon-avatar,
-  .avatar-button:focus .icon-avatar {
+  #user-guest-actions-mobile {
     display: none;
   }
 
-  .avatar-button:hover .icon-logout,
-  .avatar-button:focus .icon-logout {
-    display: inline;
+  @media (max-width: 768px) {
+    /* Hide the nav buttons on mobile */
+    #user-guest-actions {
+      display: none;
+    }
+  
+    /* Show the mobile hero buttons on mobile */
+    #user-guest-actions-mobile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+      gap: 15px;
+    }
+  
+    /* Adjust styles for the hero buttons to fit mobile screens */
+    .hero-btn {
+      padding: 12px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      text-align: center;
+      width: 100%;
+      max-width: 300px;
+    }
+  
+    #loginBtn.hero-btn {
+      background-color: transparent;
+      color: #fff;
+      border: 1px solid #fff;
+    }
+    
+    #signupBtn.hero-btn {
+      background-color: var(--color-primary);
+      color: #fff;
+      border: none;
+    }
+    #getStartedButton{
+        display: none !important;
+    }
   }
-  #usernameLabel{
+
+  #getStartedButton-mobile {
     display: none !important;
   }
-
-  .avatar-button i::before {
-    content: "\f2bd"; /* default: fa-circle-user */
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    transition: all 0.2s ease;
-  }
-
-  .avatar-button:hover i::before {
-    content: "\f2f5"; /* on hover: fa-sign-out-alt */
-  }
-  
-    #navLinks {
-      display: none;
-      flex-direction: column;
-      background-color: #0a0a20;
-      position: absolute;
-      top: 65px;
-      right: 20px;
-      width: 200px;
-      padding: 15px;
-      border-radius: 8px;
-      z-index: 999;
-    }
-  
-    #navLinks.show {
-      display: flex;
-    }
-  
-  
-    .footer-content h2 {
-      font-size: 1.4rem;
-    }
-  
-    .footer-content p {
-      font-size: 0.9rem;
-    }
-  
-    .footer-links {
-      flex-direction: flex-wrap;
-      justify-content: center;
-      gap: 10px;
-      text-align: center;
-      padding-bottom: 20px;
-    }
-  }
-
-  @media (min-width: 769px) {
-    .avatar-button:hover #avatarIcon {
-      content: none;
-      font-family: "Font Awesome 6 Free";
-    }
-  
-    .avatar-button:hover #avatarIcon::before {
-      content: "\f2f5"; /* fa-right-from-bracket */
-      font-weight: 900;
-    }
-  }
-  
-  /* Show "Create Project" button only on mobile */
-  .mobile-create-btn {
-    display: none;
-    background-color: #ff4b5c;
-    padding: 14px 28px;
-  text-decoration: none;
-  border-radius: 50px;
-  font-weight: 600;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  }
-  .mobile-create-btn a{
-    font-size: 18px;
-  } 
-  
-  @media (max-width: 768px) {
-    .mobile-create-btn {
-    display: inline-block;
-    width: 100%;
-    max-width: 300px;
-    }
-
-    .mobile-create-btn:hover {
-        background-color: #e03552;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(255, 75, 92, 0.4);
-        text-decoration: none;
-      }
-  }
-
-
-

@@ -81,3 +81,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  // This is a placeholder. In a real app, this should check for a token or session.
+  // For this example, let's assume this function returns true if the user is logged in.
+  function isLoggedIn() {
+      return sessionStorage.getItem('isLoggedIn') === 'true';
+  }
+
+  const navGuestActions = document.getElementById('user-guest-actions');
+  const navUserActions = document.getElementById('user-auth-actions');
+  const heroGuestActionsMobile = document.getElementById('user-guest-actions-mobile');
+  const getStartedButton = document.getElementById('getStartedButton');
+
+  function updateUI() {
+      if (isLoggedIn()) {
+          // Logged-in state:
+          // Hide all guest-related buttons
+          if (navGuestActions) navGuestActions.style.display = 'none';
+          if (heroGuestActionsMobile) heroGuestActionsMobile.style.display = 'none';
+
+          // Show user-specific actions and the "Get Started" button
+          if (navUserActions) navUserActions.style.display = 'flex';
+          if (getStartedButton) getStartedButton.style.display = 'block';
+
+          // You can also update the username here if needed
+          const usernameLabel = document.getElementById('usernameLabel');
+          if (usernameLabel) {
+              const storedUsername = sessionStorage.getItem('username') || 'User';
+              usernameLabel.textContent = `Hi, ${storedUsername}`;
+          }
+
+      } else {
+          // Guest (not logged in) state:
+          // Hide the user-specific actions and the "Get Started" button
+          if (navUserActions) navUserActions.style.display = 'none';
+          if (getStartedButton) getStartedButton.style.display = 'none';
+          
+          // Show the guest login/signup buttons based on screen size
+          // The CSS media queries will handle which of these two is visible.
+          if (navGuestActions) navGuestActions.style.display = 'flex'; // On desktop, CSS will show this
+          if (heroGuestActionsMobile) heroGuestActionsMobile.style.display = 'flex'; // On mobile, CSS will show this
+      }
+  }
+
+  // Call the function to set the initial UI state on page load
+  updateUI();
+
+  // Event listener for a hypothetical login action
+  // You would call this function after a successful login.
+  // Example: 
+  // const successfulLogin = () => {
+  //     sessionStorage.setItem('isLoggedIn', 'true');
+  //     sessionStorage.setItem('username', 'Alex'); // Store username
+  //     updateUI();
+  // };
+
+  // Event listener for the logout button
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+          sessionStorage.removeItem('isLoggedIn');
+          sessionStorage.removeItem('username');
+          // Redirect to home page or update UI
+          window.location.href = '/'; 
+          updateUI();
+      });
+  }
+});
