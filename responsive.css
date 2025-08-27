@@ -33,11 +33,6 @@
       font-size: 0.4rem;
       padding: 0.1em 0.5em;
     }
-
-    /* This will show the user menu in the nav on mobile when logged in */
-  #user-auth-actions {
-    display: flex;
-  }
   
    /* --- Hero Section --- */
     .hero {
