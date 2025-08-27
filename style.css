@@ -584,3 +584,7 @@ body.summarizer-active .site-footer {
   pointer-events: auto;
   transform: scale(1);
 }
+
+#getStartedButton-mobile{
+  display: none !important;
+}
