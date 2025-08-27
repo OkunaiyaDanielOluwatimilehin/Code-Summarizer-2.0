@@ -212,41 +212,94 @@
   #getStartedButton-mobile {
     display: none;
   }
-
-  /* --- Mobile Responsiveness --- */
+/* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
     /* ... (your existing mobile styles) ... */
   
     .upload-box {
-      width: 95%; /* Adjust width to take up most of the screen */
-      margin: 20px auto; /* Reduce margin for better use of space */
-      padding: 15px; /* Reduce padding to save space */
+      width: 85%; /* Keep it at 95% to allow a small margin on the sides */
+      max-width: none; /* Remove any desktop max-width constraints */
+      margin: 20px auto; /* Centered with smaller top/bottom margin */
+      padding: 15px; /* Slightly reduced padding */
+      box-shadow: none; /* Reduce heavy shadows on small screens for cleaner look */
+      border: 1px dashed #007bff; /* Use a thinner border for mobile */
+    }
+  
+    .upload-label {
+      width: 100%; /* Ensure label takes full width of the box */
     }
   
     .upload-area {
-      padding: 20px; /* Adjust padding inside the drop zone */
-      text-align: center;
+      padding: 25px 15px; /* Adjust internal padding for text */
+      min-height: 120px; /* Give it a reasonable minimum height */
+      display: flex; /* Use flexbox for vertical centering */
+      flex-direction: column;
+      justify-content: center; /* Center content vertically */
+      align-items: center; /* Center content horizontally */
+      border: 1px dashed #ccc; /* Use a thinner dashed border */
     }
   
-    .upload-area p,
+    .upload-area p {
+      font-size: 1rem; /* Adjust font size for main instruction */
+      margin-bottom: 5px; /* Smaller margin below paragraph */
+      line-height: 1.4; /* Improve line spacing */
+    }
+  
     .upload-area span {
-      font-size: 14px; /* Reduce font size for readability */
-      word-wrap: break-word; /* Prevents text overflow */
+      font-size: 0.9rem; /* Smaller font size for secondary text */
+      display: block; /* Ensure it takes its own line */
     }
   
     .file-input-wrapper {
-      flex-direction: column; /* Stack the elements vertically */
-      gap: 10px; /* Add some space between the stacked elements */
+      flex-direction: column;
+      gap: 10px;
+      width: 100%; /* Ensure it takes full width */
+      margin-top: 15px; /* Add some space above the input/upload button */
     }
   
     #uploadButton {
-      width: 100%; /* Make the button full-width */
-      font-size: 14px; /* Adjust font size */
-      padding: 10px 20px; /* Adjust button padding */
+      width: 100%; /* Full width for the button */
+      padding: 12px 20px; /* Adequate padding for tapping */
+      font-size: 1rem; /* Clear font size */
+      margin-top: 0; /* Align with other elements in flex column */
     }
   
-    .close-btn {
-      top: 5px; /* Adjust position of the close button */
-      right: 5px;
+    /* --- Result Box Specific Styling for Mobile --- */
+    #resultBox {
+      padding: 1rem; /* Reduced padding for the result box */
+      margin-top: 1rem; /* Space from elements above */
+      background-color: #e9ecef; /* Slightly lighter background for contrast */
+      border-radius: 6px;
+      width: 100%; /* Ensure it fills the upload box */
+      box-sizing: border-box; /* Include padding in width calculation */
+      overflow-x: auto; /* Allow horizontal scrolling if summary is very long */
+    }
+  
+    .summary-output p {
+      font-size: 0.9rem; /* Smaller font size for the summary text */
+      line-height: 1.5; /* Good line height for readability */
+      white-space: pre-wrap; /* Ensures line breaks are preserved and text wraps */
+      word-break: break-word; /* Prevents long words from overflowing */
+      max-height: 250px; /* Set a max height for the text area */
+      overflow-y: auto; /* Enable vertical scrolling for long summaries */
+      margin-bottom: 0.5rem; /* Reduced bottom margin */
+      color: #333; /* Darker text for readability */
+    }
+  
+    .copy-btn {
+      top: 0.5rem; /* Adjust copy button position */
+      right: 0.5rem;
+      padding: 0.4rem 0.8rem; /* Smaller padding for button */
+      font-size: 0.75rem; /* Smaller font for button text */
+    }
+    
+    .close-box {
+      top: 8px; /* Adjust close button position */
+      right: 8px;
+      width: 24px; /* Smaller close button */
+      height: 24px;
+    }
+    .close-box::before {
+      font-size: 20px; /* Smaller 'X' */
     }
   }
