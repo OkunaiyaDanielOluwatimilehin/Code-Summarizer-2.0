@@ -12,24 +12,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   const avatarButton = document.getElementById("avatarButton");
   const userDropdown = document.getElementById("userDropdown");
   const logoutBtn = document.getElementById("logoutBtn");
-  const getStartedButton = document.getElementById('getStartedButton');
+  const getStartedButtonDesktop = document.getElementById('getStartedButton'); // Assuming this is for desktop
+  const getStartedButtonMobile = document.getElementById('getStartedButton-mobile'); // For mobile
 
-  // New element references for the mobile hero buttons
   const heroGuestActionsMobile = document.getElementById('user-guest-actions-mobile');
 
-  // Utility to update UI
   async function handleSession(session) {
     const user = session?.user || null;
 
     if (user) {
       // User is logged in:
-      // Hide login/signup buttons on nav and hero
+      // Hide all guest-related buttons
       if (loginSection) loginSection.style.display = 'none';
       if (heroGuestActionsMobile) heroGuestActionsMobile.style.display = 'none';
 
-      // Show the user menu and 'Get Started' button
+      // Show the user menu and 'Get Started' buttons
       if (userSection) userSection.style.display = 'flex';
-      if (getStartedButton) getStartedButton.style.display = 'block';
+      if (getStartedButtonDesktop) getStartedButtonDesktop.style.display = 'block'; // Or 'flex'
+      if (getStartedButtonMobile) getStartedButtonMobile.style.display = 'block'; // Or 'flex'
 
       // Fetch the username from the profiles table
       const { data: profile } = await supabase
@@ -43,34 +43,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } else {
       // User is not logged in:
-      // Hide the user menu and 'Get Started' button
+      // Hide the user menu and 'Get Started' buttons
       if (userSection) userSection.style.display = 'none';
-      if (getStartedButton) getStartedButton.style.display = 'none';
+      if (getStartedButtonDesktop) getStartedButtonDesktop.style.display = 'none';
+      if (getStartedButtonMobile) getStartedButtonMobile.style.display = 'none';
 
       // Show login/signup buttons based on screen size (handled by your CSS)
-      if (loginSection) loginSection.style.display = 'flex'; // Nav buttons for desktop
-      if (heroGuestActionsMobile) heroGuestActionsMobile.style.display = 'flex'; // Hero buttons for mobile
+      if (loginSection) loginSection.style.display = 'flex';
+      if (heroGuestActionsMobile) heroGuestActionsMobile.style.display = 'flex';
       if (usernameLabel) usernameLabel.textContent = "Hi, Guest";
     }
   }
 
-  // Initial session check
   const { data } = await supabase.auth.getSession();
   await handleSession(data.session);
 
-  // Watch for changes
   supabase.auth.onAuthStateChange((event, session) => {
     handleSession(session);
   });
 
-  // Logout
   logoutBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
     await supabase.auth.signOut();
     window.location.href = "/index.html";
   });
 
-  // Dropdown toggle
   let dropdownOpen = false;
   avatarButton?.addEventListener("click", async () => {
     if (window.innerWidth <= 768) {
@@ -88,7 +85,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // Close dropdown on outside click
   document.addEventListener("click", (e) => {
     if (!avatarButton?.contains(e.target) && !userDropdown?.contains(e.target)) {
       userDropdown?.classList.remove("show");
