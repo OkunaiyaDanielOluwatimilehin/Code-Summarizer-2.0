@@ -212,3 +212,41 @@
   #getStartedButton-mobile {
     display: none;
   }
+
+  /* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    /* ... (your existing mobile styles) ... */
+  
+    .upload-box {
+      width: 95%; /* Adjust width to take up most of the screen */
+      margin: 20px auto; /* Reduce margin for better use of space */
+      padding: 15px; /* Reduce padding to save space */
+    }
+  
+    .upload-area {
+      padding: 20px; /* Adjust padding inside the drop zone */
+      text-align: center;
+    }
+  
+    .upload-area p,
+    .upload-area span {
+      font-size: 14px; /* Reduce font size for readability */
+      word-wrap: break-word; /* Prevents text overflow */
+    }
+  
+    .file-input-wrapper {
+      flex-direction: column; /* Stack the elements vertically */
+      gap: 10px; /* Add some space between the stacked elements */
+    }
+  
+    #uploadButton {
+      width: 100%; /* Make the button full-width */
+      font-size: 14px; /* Adjust font size */
+      padding: 10px 20px; /* Adjust button padding */
+    }
+  
+    .close-btn {
+      top: 5px; /* Adjust position of the close button */
+      right: 5px;
+    }
+  }

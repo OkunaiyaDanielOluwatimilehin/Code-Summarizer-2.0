@@ -12,10 +12,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const avatarButton = document.getElementById("avatarButton");
   const userDropdown = document.getElementById("userDropdown");
   const logoutBtn = document.getElementById("logoutBtn");
-  const getStartedButtonDesktop = document.getElementById('getStartedButton'); // Assuming this is for desktop
-  const getStartedButtonMobile = document.getElementById('getStartedButton-mobile'); // For mobile
+  const getStartedButtonDesktop = document.getElementById('getStartedButton');
+  const getStartedButtonMobile = document.getElementById('getStartedButton-mobile');
 
   const heroGuestActionsMobile = document.getElementById('user-guest-actions-mobile');
+
+  // New references for the upload box functionality
+  const uploadBox = document.getElementById('uploadBox');
+  const closeUploadBoxBtn = document.getElementById('closeUploadBox');
 
   async function handleSession(session) {
     const user = session?.user || null;
@@ -28,10 +32,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Show the user menu and 'Get Started' buttons
       if (userSection) userSection.style.display = 'flex';
-      if (getStartedButtonDesktop) getStartedButtonDesktop.style.display = 'block'; // Or 'flex'
-      if (getStartedButtonMobile) getStartedButtonMobile.style.display = 'block'; // Or 'flex'
+      if (getStartedButtonDesktop) getStartedButtonDesktop.style.display = 'block';
+      if (getStartedButtonMobile) getStartedButtonMobile.style.display = 'block';
 
-      // Fetch the username from the profiles table
       const { data: profile } = await supabase
         .from('profiles')
         .select('username')
@@ -92,4 +95,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       dropdownOpen = false;
     }
   });
+
+  // --- New Functionality: "Get Started" Button Clicks ---
+  // A helper function to open the upload box
+  function openUploadBox() {
+    if (uploadBox) {
+        uploadBox.style.display = 'flex';
+    }
+  }
+
+  // A helper function to close the upload box
+  function closeUploadBox() {
+    if (uploadBox) {
+        uploadBox.style.display = 'none';
+    }
+  }
+
+  // Event listeners for the "Get Started" buttons
+  if (getStartedButtonDesktop) {
+    getStartedButtonDesktop.addEventListener('click', openUploadBox);
+  }
+  if (getStartedButtonMobile) {
+    getStartedButtonMobile.addEventListener('click', openUploadBox);
+  }
+
+  // Event listener for the close button
+  if (closeUploadBoxBtn) {
+    closeUploadBoxBtn.addEventListener('click', closeUploadBox);
+  }
 });
