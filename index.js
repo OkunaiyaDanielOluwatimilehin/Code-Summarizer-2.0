@@ -1,3 +1,11 @@
+import { Counter } from './counter.js';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabase = createClient(
+  'https://obqmgqzjtvdzmcfvteyn.supabase.co',
+  'sb_publishable_Jjxl5hlVxOj1IeucdHKeXw_noPg319G'
+);
+
 document.addEventListener("DOMContentLoaded", async () => {
   const typewriterTextElement = document.getElementById("typewriter-text");
   const getStartedButton = document.getElementById("getStartedButton");
@@ -156,7 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       item.classList.toggle('active');
     });
   });
-  
+
   // --- Company counter animation ---
   const companiesCounterElement = document.getElementById('companies-counter');
   const targetCount = 100;
