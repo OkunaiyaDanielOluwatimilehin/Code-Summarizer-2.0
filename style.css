@@ -775,8 +775,8 @@ html {
   padding: 60px 10px;
   background: #0f0f25;
   color: white;
-  text-align: left;
-  align-items: left;
+  text-align: center;
+  align-items: center;
 }
 
 .about-container {
@@ -806,7 +806,7 @@ html {
   margin-top: 2rem;
   display: flex;
   gap: 1rem;
-  justify-content: left;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -900,11 +900,11 @@ html {
 
 #uploadCounterContainer {
   margin-top: 10px;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: #fff;
   background: rgba(255, 76, 76, 0.1);
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 20px 80px;
+  border-radius: 4px;
   display: inline-block;
 }
 
