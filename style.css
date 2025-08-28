@@ -898,5 +898,22 @@ html {
   transition: transform 0.3s ease;
 }
 
+#uploadCounterContainer {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #fff;
+  background: rgba(255, 76, 76, 0.1);
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+#uploadCounterContainer.alert {
+  background: rgba(255, 76, 76, 0.2);
+  color: #FF4C4C;
+  font-weight: 600;
+}
+
+
 
 

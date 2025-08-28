@@ -227,8 +227,9 @@ body, html {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  width: 100%; /* full-width since you used class="full-width" */
+  width: 20%; /* full-width since you used class="full-width" */
   transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 25px;
 }
 
 #finish-onboarding:hover {
