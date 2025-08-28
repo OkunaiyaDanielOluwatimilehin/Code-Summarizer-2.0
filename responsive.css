@@ -1,323 +1,163 @@
-#user-auth-actions {
+/* ================= MOBILE RESPONSIVENESS ================= */
+@media (max-width: 768px) {
+  /* ---------- Navbar ---------- */
+  #navbar {
+    padding: 15px 20px;
+  }
+  #navbar .nav-links,
+  #navbar .nav-actions {
+    display: none; /* hide desktop nav & buttons */
+  }
+  .nav-toggle {
+    display: block; /* show hamburger */
+  }
+
+  /* Mobile menu dropdown */
+  .mobile-menu {
+    position: relative;       /* push content down */
+    display: none;            /* hidden by default */
+    flex-direction: column;
+    gap: 1rem;
+    padding: 30px 50px;
+    background: var(--color-dark-bg);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    z-index: 99;
+    margin-bottom: 15px;      /* small gap from hero */
+  }
+  .mobile-menu.show,
+  .mobile-menu.active {
     display: flex;
   }
-
-/* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
-    /* --- Navbar --- */
-    #navbar {
-        /* Change this to row to keep elements side-by-side */
-        flex-direction: row; 
-        align-items: center; /* Vertically align items */
-        justify-content: space-between; /* Space out the logo and buttons */
-        padding: 20px 20px;
-        gap: 0; /* Remove gap that could cause issues */
-    }
-
-    .nav-left {
-        /* This rule is now crucial for alignment */
-        width: auto;
-    }
-
-    /* This is the key rule: Hide the login/signup buttons on mobile */
-    #user-guest-actions {
-        display: none !important;
-    }
-
-    /* This will show the user menu in the nav on mobile when logged in */
-    #user-auth-actions {
-        /* Make sure this is also a row-based flex container */
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-    
-    .nav-left {
-      width: 100%;
-      justify-content: space-between;
-    }
-  
-    .logo {
-      align-items: center;
-    }
-  
-    .code {
-      font-size: 24px;
-    }
-  
-    .summarizer {
-      font-size: 12px;
-    }
-  
-    .version {
-      font-size: 0.4rem;
-      padding: 0.1em 0.5em;
-    }
-   /* --- Hero Section --- */
-    .hero {
-      padding: 60px 20px;
-    }
-  
-    .hero-text h1 {
-        font-size: 3rem;
-        line-height: 1.2; /* Ensures text wraps correctly */
-      }
-    
-      .typewriter-container {
-        font-size: 1.2rem;
-        height: auto; /* Change from fixed height to auto */
-        margin-bottom: 20px;
-        white-space: normal; /* Allows text to wrap to a new line */
-      }
-    
-      .hero-text p {
-        font-size: 1rem;
-        line-height: 1.5;
-        margin-top: 0;
-      }
-  
-    .hero-buttons {
-      flex-direction: column;
-      width: 100%;
-    }
-  
-    .btn {
-      width: 100%;
-      max-width: 100%;
-    }
-  
-    /* --- Buttons --- */
-    .btn.primary {
-      padding: 12px 24px;
-      font-size: 16px;
-    }
-    
-    /* Hide the "Get Started" button initially on mobile */
-    .btn.primary#getStartedBtn {
-      display: none !important;
-    }
-  
-    /* Show the "Sign In" and "Sign Up" buttons */
-    #loginBtn,
-    #signupBtn {
-      display: block;
-    }
-  
-    /* --- Upload Box --- */
-    .upload-box {
-      width: 95%;
-      padding: 20px;
-    }
-  
-    .upload-area {
-      padding: 20px;
-    }
-  
-    .upload-area p,
-    .upload-area span {
-      font-size: 16px;
-    }
-  
-    .file-input-wrapper {
-      flex-direction: column;
-      gap: 10px;
-    }
-    
-    /* --- Counter Section --- */
-    .counter-section {
-      padding: 40px 20px;
-    }
-  
-    .counter-display {
-      font-size: 3rem;
-    }
-  
-    .counter-display span:last-child {
-      font-size: 2rem;
-    }
-  
-    .counter-content p {
-      font-size: 1rem;
-    }
-  
-    /* --- FAQ Section --- */
-    .faq-section h2 {
-      font-size: 2rem;
-    }
-  
-    .faq-question {
-      font-size: 1.1rem;
-    }
-  
-    .faq-answer {
-      font-size: 1rem;
-    }
-  
-    /* --- Footer --- */
-    .footer-content {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-  
-    .footer-section {
-      flex-basis: 100%;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-  
-    .footer-section.logo-section {
-      flex-basis: 100%;
-    }
-  
-    .quick-links-horizontal {
-      flex-direction: column;
-      gap: 10px;
-    }
-    
-    .rights {
-      text-align: center;
-    }
+  .mobile-menu a {
+    color: white;
+    font-size: 1rem;
+    padding: 10px 0;
+    text-decoration: none;
+  }
+  .mobile-menu .nav-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .mobile-menu .btn-signup,
+  .mobile-menu .btn-login {
+    width: 100%;
+    padding: 12px 0;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: 600;
   }
 
-  #user-guest-actions-mobile {
-    display: none;
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 60px 40px;
+  }
+  .hero-text h1 {
+    font-size: 2.8rem;
+  }
+  .typewriter-container {
+    font-size: 1.2rem;
+    height: auto;
+    white-space: normal;
+    overflow: visible;
+    text-align: center;
+  }
+  .hero-text p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .btn {
+    max-width: 100%;
+    padding: 14px 20px;
+    border-radius: 6px;
   }
 
-  @media (max-width: 768px) {
-    /* Hide the nav buttons on mobile */
-    #user-guest-actions {
-      display: none;
-    }
-  
-    /* Show the mobile hero buttons on mobile */
-    #user-guest-actions-mobile {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: 100%;
-      gap: 15px;
-    }
-  
-    /* Adjust styles for the hero buttons to fit mobile screens */
-    .hero-btn {
-      padding: 12px 24px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      text-align: center;
-      width: 100%;
-      max-width: 300px;
-    }
-  
-    #loginBtn.hero-btn {
-      background-color: transparent;
-      color: #fff;
-      border: 1px solid #fff;
-    }
-    
-    #signupBtn.hero-btn {
-      background-color: var(--color-primary);
-      color: #fff;
-      border: none;
-    }
-    #getStartedButton{
-        display: none !important;
-    }
+  /* ---------- Buttons ---------- */
+ /* Mobile Buttons */
+.mobile-menu .btn-login,
+.mobile-menu .btn-signup,
+.btn-primary {
+  width: 100%;           /* full width */
+  max-width: none;       /* remove desktop max-width */
+  padding: 14px 0;       /* balanced height */
+  font-size: 1rem;       /* readable on small screens */
+  text-align: center;    
+  border-radius: 6px;    /* rounded corners for mobile */
+  display: inline-block; /* ensure proper alignment */
+  box-sizing: border-box;
+}
+
+
+  /* ---------- Pricing ---------- */
+  .pricing-section {
+    padding: 60px 15px;
+  }
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+  .pricing-card {
+    padding: 30px 20px;
   }
 
-  #getStartedButton-mobile {
-    display: none;
+  /* ---------- FAQ ---------- */
+  .faq-section h2 {
+    font-size: 2rem;
   }
-/* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
-    /* ... (your existing mobile styles) ... */
-  
-    .upload-box {
-      width: 85%; /* Keep it at 95% to allow a small margin on the sides */
-      max-width: none; /* Remove any desktop max-width constraints */
-      margin: 20px auto; /* Centered with smaller top/bottom margin */
-      padding: 15px; /* Slightly reduced padding */
-      box-shadow: none; /* Reduce heavy shadows on small screens for cleaner look */
-      border: 1px dashed #007bff; /* Use a thinner border for mobile */
-    }
-  
-    .upload-label {
-      width: 100%; /* Ensure label takes full width of the box */
-    }
-  
-    .upload-area {
-      padding: 25px 15px; /* Adjust internal padding for text */
-      min-height: 120px; /* Give it a reasonable minimum height */
-      display: flex; /* Use flexbox for vertical centering */
-      flex-direction: column;
-      justify-content: center; /* Center content vertically */
-      align-items: center; /* Center content horizontally */
-      border: 1px dashed #ccc; /* Use a thinner dashed border */
-    }
-  
-    .upload-area p {
-      font-size: 1rem; /* Adjust font size for main instruction */
-      margin-bottom: 5px; /* Smaller margin below paragraph */
-      line-height: 1.4; /* Improve line spacing */
-    }
-  
-    .upload-area span {
-      font-size: 0.9rem; /* Smaller font size for secondary text */
-      display: block; /* Ensure it takes its own line */
-    }
-  
-    .file-input-wrapper {
-      flex-direction: column;
-      gap: 10px;
-      width: 100%; /* Ensure it takes full width */
-      margin-top: 15px; /* Add some space above the input/upload button */
-    }
-  
-    #uploadButton {
-      width: 100%; /* Full width for the button */
-      padding: 12px 20px; /* Adequate padding for tapping */
-      font-size: 1rem; /* Clear font size */
-      margin-top: 0; /* Align with other elements in flex column */
-    }
-  
-    /* --- Result Box Specific Styling for Mobile --- */
-    #resultBox {
-      padding: 1rem; /* Reduced padding for the result box */
-      margin-top: 1rem; /* Space from elements above */
-      background-color: #e9ecef; /* Slightly lighter background for contrast */
-      border-radius: 6px;
-      width: 100%; /* Ensure it fills the upload box */
-      box-sizing: border-box; /* Include padding in width calculation */
-      overflow-x: auto; /* Allow horizontal scrolling if summary is very long */
-    }
-  
-    .summary-output p {
-      font-size: 0.9rem; /* Smaller font size for the summary text */
-      line-height: 1.5; /* Good line height for readability */
-      white-space: pre-wrap; /* Ensures line breaks are preserved and text wraps */
-      word-break: break-word; /* Prevents long words from overflowing */
-      max-height: 250px; /* Set a max height for the text area */
-      overflow-y: auto; /* Enable vertical scrolling for long summaries */
-      margin-bottom: 0.5rem; /* Reduced bottom margin */
-      color: #333; /* Darker text for readability */
-    }
-  
-    .copy-btn {
-      top: 0.5rem; /* Adjust copy button position */
-      right: 0.5rem;
-      padding: 0.4rem 0.8rem; /* Smaller padding for button */
-      font-size: 0.75rem; /* Smaller font for button text */
-    }
-    
-    .close-box {
-      top: 8px; /* Adjust close button position */
-      right: 8px;
-      width: 24px; /* Smaller close button */
-      height: 24px;
-    }
-    .close-box::before {
-      font-size: 20px; /* Smaller 'X' */
-    }
+  .faq-question {
+    font-size: 1.1rem;
   }
+
+  /* ---------- About ---------- */
+  .about-section {
+    padding: 40px 15px;
+  }
+  .about-text h2 {
+    font-size: 2rem;
+  }
+  .about-text p {
+    font-size: 1.1rem;
+  }
+  .about-cta {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .about-btn,
+  .github-btn {
+    text-align: center;
+    width: 100%;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-section {
+    flex-basis: 100%;
+    text-align: center;
+  }
+  .quick-links-horizontal {
+    flex-direction: column;
+    gap: 10px;
+  }
+  /* Mobile menu logged-in: just logout button */
+.mobile-menu.logged-in .logout-btn {
+  width: 100%;
+  padding: 12px 0;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: 600;
+  background: var(--color-primary);
+  color: white;
+}
+
+.mobile-menu.logged-in .logout-btn:hover {
+  background: var(--color-hover);
+}
+}

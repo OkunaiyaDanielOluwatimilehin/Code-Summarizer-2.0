@@ -30,10 +30,10 @@ body.summarizer-active .site-footer {
   display: none !important;
 }
 
-/* --- Utilities --- */
-.hidden {
-  display: none !important;
+html {
+  scroll-behavior: smooth;
 }
+
 
 .show {
   opacity: 1;
@@ -58,73 +58,134 @@ body.summarizer-active .site-footer {
   50% { border-right-color: var(--color-accent); }
 }
 
+.hidden {
+  display: none;
+ }
+
 /* --- Navbar --- */
+/* ================= NAVBAR STYLES ================= */
+/* ====== Navbar ====== */
+/* ====== Navbar ====== */
 #navbar {
-  position: relative;
+  background-color: transparent;
   width: 100%;
   padding: 20px 50px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   box-sizing: border-box;
 }
 
-.nav-left {
+/* 3-column layout */
+#navbar .logo-link {
+  flex: 1;
+}
+#navbar .nav-links {
+  flex: 1;
   display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 2rem;
+  list-style: none;
+}
+#navbar .nav-actions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
 }
 
+/* ---- Logo ---- */
 .logo-link { text-decoration: none; color: inherit; }
-.logo { display: flex; flex-direction: column; align-items: flex-start; overflow: hidden; cursor: pointer; }
-.code { font-weight: bold; width: 100%; color: var(--color-text-light); font-size: 30px; }
+.logo { display: flex; flex-direction: column; align-items: flex-start; cursor: pointer; }
+.code { font-weight: bold; color: white; font-size: 30px; }
 .summarizer-line { display: flex; align-items: center; gap: 0.5em; margin-top: 0.2em; }
-.summarizer { transform: translateY(-100%); opacity: 0; animation: slideDown 1s ease-out 0.5s forwards; font-size: 14px; }
+.summarizer {
+  transform: translateY(-100%); opacity: 0;
+  animation: slideDown 1s ease-out 0.5s forwards;
+  color: white; font-size: 14px;
+}
 .version {
-  background: var(--color-primary);
-  color: var(--color-text-light);
-  font-size: 0.5rem;
-  padding: 0.2em 0.6em;
-  border-radius: 2px;
-  transform: translateX(-150%);
-  opacity: 0;
+  background: #FF4C4C; color: white; font-size: 0.5rem;
+  padding: 0.2em 0.6em; border-radius: 2px;
+  transform: translateX(-150%); opacity: 0;
   animation: slideInLeft 1s ease-out 1.2s forwards;
 }
 
-#user-guest-actions {
-  /* This ensures the buttons are in a row with spacing between them */
-  display: flex;
-  gap: 20px; /* Adjust this value for the desired spacing */
-  align-items: center;
-}
+/* Animations */
+@keyframes slideDown { to { transform: translateY(0); opacity: 1; } }
+@keyframes slideInLeft { to { transform: translateX(0); opacity: 1; } }
 
-/* Base styles for the buttons */
-.nav-btn {
-  padding: 10px 20px;
-  border-radius: 5px;
+/* ---- Links ---- */
+.nav-links li a {
   text-decoration: none;
-  transition: background-color 0.3s ease;
+  color: white;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
+.nav-links li a:hover { color: #FF4C4C; }
 
-#loginBtn {
-  background-color: transparent;
-  color: #fff;
+/* ---- Right Side ---- */
+.btn-login {
+  color: white;
+  text-decoration: none;
+  /* font-weight: 00; */
+  padding: 2px 60px;   /* balanced rectangle */
   border: 1px solid #fff;
+  border-radius: 4px;   /* softer corners */
+  background: transparent;
+  transition: all 0.2s ease;
 }
 
-#signupBtn {
-  background-color: var(--color-primary);
-  color: #fff;
-}
-
-
-#loginBtn:hover{
-  background-color: var(--color-hover);
+.btn-login:hover {
   border: none;
+  background-color: #FF4C4C;
 }
-#signupBtn:hover {
-  background-color:var(--color-hover); 
+
+.btn-primary {
+  background: #FF4C4C;
+  color: white;
+  padding: 17px 70px;   /* larger and bolder */
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease;
 }
+
+.btn-primary:hover {
+  background: #e04444;
+}
+
+/* ---- Mobile ---- */
+.nav-toggle {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.mobile-menu {
+  display: none;
+  background: #0a0a20;
+  padding: 20px;
+}
+.mobile-menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.mobile-menu a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+.nav-actions a { display: inline-flex; align-items: center; }
+
+
 
 /* --- Hero Section --- */
 .hero {
@@ -525,6 +586,7 @@ body.summarizer-active .site-footer {
   color: rgba(255, 255, 255, 0.6);
 }
 
+
 /* Style for the close box container */
 .close-box {
   /* Position it at the top-right corner of its parent element */
@@ -585,6 +647,256 @@ body.summarizer-active .site-footer {
   transform: scale(1);
 }
 
-#getStartedButton-mobile{
-  display: none;
+
+/* Pricing Section */
+
+/* ===== Pricing Section ===== */
+.pricing-section {
+  padding: 100px 20px;
+  text-align: center;
+  background: #0a0a20;
+  color: white;
 }
+
+.pricing-section h2 {
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.pricing-subtitle {
+  font-size: 1rem;
+  color: #bbb;
+  margin-bottom: 3rem;
+}
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Individual Card */
+.pricing-card {
+  background: #14142a;
+  border-radius: 16px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, border 0.3s ease;
+  position: relative;
+}
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+}
+
+.pricing-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #FF4C4C;
+}
+
+.price span {
+  font-size: 1rem;
+  color: #bbb;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+}
+
+.pricing-card ul li {
+  margin: 0.6rem 0;
+  font-size: 1rem;
+  color: #ddd;
+}
+
+/* Featured Plan */
+.pricing-card.featured {
+  border: 2px solid #FF4C4C;
+  transform: scale(1.05);
+}
+
+.badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FF4C4C;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* ===== Buttons (new style) ===== */
+.pricing-btn {
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 12px 28px;
+  transition: all 0.3s ease;
+}
+
+/* Primary (big call-to-action) */
+.primary-btn {
+  background: #FF4C4C;
+  color: white;
+}
+.primary-btn:hover {
+  background: #e04444;
+}
+
+/* Secondary (outlined) */
+.secondary-btn {
+  border: 2px solid #fff;
+  color: white;
+  background: transparent;
+}
+.secondary-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* About section */
+/* ===== About Section ===== */
+.about-section {
+  padding: 60px 10px;
+  background: #0f0f25;
+  color: white;
+  text-align: left;
+  align-items: left;
+}
+
+.about-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.about-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.about-text p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6rem;
+  color: #ccc;
+  font-size: 1.6rem;
+}
+
+.highlight {
+  color: #FF4C4C;
+  font-weight: 600;
+}
+
+/* CTA Buttons */
+.about-cta {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: left;
+  flex-wrap: wrap;
+}
+
+.about-btn {
+  background: #FF4C4C;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.about-btn:hover {
+  background: #e04444;
+}
+
+.github-btn {
+  background: transparent;
+  border: 2px solid #FF4C4C;
+  color: #FF4C4C;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.github-btn:hover {
+  background: #FF4C4C;
+  color: white;
+}
+
+/* Desktop navbar: logged-in user */
+#navbar .nav-actions.logged-in {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#navbar .nav-actions.logged-in .avatar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#navbar .nav-actions.logged-in .avatar-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+#navbar .nav-actions.logged-in .avatar-button:hover {
+  transform: scale(1.1); /* small pop effect */
+  /* optionally swap avatar to logout icon */
+  background-color: rgba(255, 75, 92, 0.1);
+}
+
+/* Avatar / User Icon */
+/* Avatar button styling */
+.avatar-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+}
+
+.username-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: white;
+  margin-left: 5px;
+}
+.avatar-button i{
+  font-size: 1.8rem;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+
+

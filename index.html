@@ -12,42 +12,59 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
     <!-- Your homepage content here -->
   
-    <nav id="navbar">
-      <a href="./index.html" class="logo-link">
-      <div class="logo">
-        <div class="code">Code</div>
-        <div class="summarizer-line">
-          <div class="summarizer">Summarizer</div>
-          <div class="version">1.0</div>
-        </div>
+<!-- ================= NAVBAR ================= -->
+<nav id="navbar">
+  <!-- Logo Left -->
+  <a href="./index.html" class="logo-link">
+    <div class="logo">
+      <div class="code">Code</div>
+      <div class="summarizer-line">
+        <div class="summarizer">Summarizer</div>
+        <div class="version">1.0</div>
       </div>
-    </a>
+    </div>
+  </a>
 
-  <div id="user-guest-actions">  <a href="./auth/login.html" id="loginBtn" class="nav-btn">Login</a>
-    <a href="./auth/signup.html" id="signupBtn" class="nav-btn">Sign Up</a>
-  </div>
-      <div id="user-auth-actions" class ="hidden">
-      <div class="user-menu-wrapper"> 
-       <!-- Avatar button and greeting -->
-        <button id="avatarButton" class="avatar-button">
-          <i class="fa-solid fa-circle-user fa-xl"></i>
+  <!-- Nav Links Center -->
+  <ul class="nav-links">
+    <li><a href="#faq-section">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+
+ <!-- Avatar visible only when logged in --> 
+  <button id="avatarButton" class="avatar-button">
+          <i class="fa-solid fa-right-from-bracket fa-xl icon-logout"></i>
           <span id="usernameLabel" class="username-label">Hi, Guest</span>
         </button>
-      </div>
-        <div id="userDropdown" class="user-dropdown hidden">
-          <ul class="dropdown-menu">
-            <li><a href="#"><i class="fa-solid fa-gears"></i>Dashboard</a></li>
-            <li><a href="./summary/summary.html" class="create"><i class="fa-solid fa-arrow-up-right-from-square"></i>Create Project</a></li>
-            <li><a href="#"> <i class="fa-solid fa-user-pen"></i>Edit Profile</a></li>
-            <li><a href="#" id="logoutBtn"> <i class="fa-solid fa-right-from-bracket"></i>Logout</a></li>
-          </ul>
-        </div>
-      </div>
+
+  <!-- Actions Right -->
+  <div class="nav-actions">
+    <a href="./auth/login.html" class="btn-login">Login</a>
+    <a href="./auth/signup.html" class="btn-primary">Sign Up</a>
+  </div>
+
+  <!-- Mobile Toggle -->
+  <button class="nav-toggle" id="nav-toggle">☰</button>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="./auth/login.html" class="btn-login">Login</a></li>
+    <li><a href="./auth/signup.html" class="btn-primary">Sign Up</a></li>
+  </ul>
+</div>
+
+
     
     
   <!-- 🔹 Main Content (initially hidden) -->
@@ -64,13 +81,7 @@
               <p>Seamlessly transform complex code into concise, <br> human-readable summaries powered by advanced AI. <br>Perfect for students, developers, and learners.</p>
 
               <div class="hero-buttons">
-                <div id="user-guest-actions-mobile">  <a href="./auth/login.html" id="loginBtn" class="hero-btn">Login</a>
-                  <a href="./auth/signup.html" id="signupBtn" class="hero-btn">Sign Up</a>
-                </div>
                 <button id="getStartedButton" class="btn primary">
-                  Get Started <i class="fas fa-arrow-right"></i>
-                </button>
-                <button id="getStartedButton-mobile" class="btn primary">
                   Get Started <i class="fas fa-arrow-right"></i>
                 </button>
               </div>
@@ -141,6 +152,77 @@
   </div>
 </section>
 
+<!-- Pricing Section -->
+<section class="pricing-section" id="pricing">
+  <h2>Pricing</h2>
+  <p class="pricing-subtitle">Choose a plan that fits your workflow.</p>
+
+  <div class="pricing-cards">
+    <!-- Free Plan -->
+    <div class="pricing-card">
+      <h3>Free</h3>
+      <p class="price">$0 <span>/ month</span></p>
+      <ul>
+        <li>✔ Basic summarizations</li>
+        <li>✔ Up to 3 projects</li>
+        <li>✔ Community support</li>
+      </ul>
+      <a href="./auth/signup.html" class="pricing-btn secondary-btn">Get Started</a>
+    </div>
+
+    <!-- Pro Plan (Highlighted) -->
+    <div class="pricing-card featured">
+      <div class="badge">Most Popular</div>
+      <h3>Pro</h3>
+      <p class="price">$15 <span>/ month</span></p>
+      <ul>
+        <li>✔ Unlimited summarizations</li>
+        <li>✔ Unlimited projects</li>
+        <li>✔ Priority email support</li>
+        <li>✔ Integrations (GitHub, VS Code)</li>
+      </ul>
+      <a href="/signup" class="pricing-btn primary-btn">Upgrade Now</a>
+    </div>
+
+    <!-- Enterprise Plan -->
+    <div class="pricing-card">
+      <h3>Enterprise</h3>
+      <p class="price">Custom</p>
+      <ul>
+        <li>✔ Team access & collaboration</li>
+        <li>✔ Advanced AI models</li>
+        <li>✔ Dedicated account manager</li>
+        <li>✔ SLA & on-premise options</li>
+      </ul>
+      <a href="/contact" class="pricing-btn secondary-btn">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- about section -->
+
+<section class="about-section" id="about">
+  <div class="about-container">
+    <div class="about-text">
+      <h2>About Us</h2>
+      <p>
+        We built <span class="highlight">Code Summarizer</span> to help developers save time, 
+        stay focused, and streamline their workflow. Our goal is to remove the clutter and make code understandable in seconds.
+      </p>
+      <p>
+        From students to enterprise teams, our tool is trusted by thousands worldwide. 
+        We believe in simplicity, speed, and accessibility.
+      </p>
+      <div class="about-cta">
+        <a href="#pricing" class="about-btn">Get Started</a>
+        <a href="https://github.com/your-repo" target="_blank" class="github-btn"><i class="fab fa-github"></i> View on GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 <footer class="footer">
   <div class="footer-content">
       <div class="footer-section logo-section">
@@ -150,10 +232,9 @@
       <div class="footer-section">
           <h3>Quick Links</h3>
           <ul class="quick-links-horizontal"> <li><a href="index.html">Home</a></li>
-              <li><a href="#">Features</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Contact</a></li>
-              <li><a href="#faq-section">FAQ</a></li>
+              <li><a href="#faq-section">Features</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#about">About</a></li>
           </ul>
       </div>
   </div>
@@ -164,5 +245,4 @@
 </body>
 <script type="module" src="index.js"></script>
 <script type="module" src="session.js"></script>
-<script src="about.js"></script>
 </html>

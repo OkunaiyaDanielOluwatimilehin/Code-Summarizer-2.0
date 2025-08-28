@@ -6,121 +6,57 @@ const supabase = createClient(
 );
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const loginSection = document.getElementById("user-guest-actions");
-  const userSection = document.getElementById("user-auth-actions");
-  const usernameLabel = document.getElementById("usernameLabel");
-  const avatarButton = document.getElementById("avatarButton");
-  const userDropdown = document.getElementById("userDropdown");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const getStartedButtonDesktop = document.getElementById('getStartedButton');
-  const getStartedButtonMobile = document.getElementById('getStartedButton-mobile');
+  const usernameLabel = document.getElementById('usernameLabel');
+  const avatarButton = document.getElementById('avatarButton');
+  const navActions = document.querySelector('.nav-actions'); // desktop login/signup
+  const mobileLogin = document.querySelector('.mobile-menu .btn-login');
+  const mobileSignup = document.querySelector('.mobile-menu .btn-primary');
 
-  const heroGuestActionsMobile = document.getElementById('user-guest-actions-mobile');
-
-  // New references for the upload box functionality
-  const uploadBox = document.getElementById('uploadBox');
-  const closeUploadBoxBtn = document.getElementById('closeUploadBox');
-
-  async function handleSession(session) {
+  async function updateUI(session) {
     const user = session?.user || null;
 
     if (user) {
-      // User is logged in:
-      // Hide all guest-related buttons
-      if (loginSection) loginSection.style.display = 'none';
-      if (heroGuestActionsMobile) heroGuestActionsMobile.style.display = 'none';
+      // Show logout button
+      avatarButton.style.display = 'flex';
 
-      // Show the user menu and 'Get Started' buttons
-      if (userSection) userSection.style.display = 'flex';
-      if (getStartedButtonDesktop) getStartedButtonDesktop.style.display = 'block';
-      if (getStartedButtonMobile) getStartedButtonMobile.style.display = 'block';
+      // Hide guest buttons
+      navActions.style.display = 'none';
+      if (mobileLogin) mobileLogin.style.display = 'none';
+      if (mobileSignup) mobileSignup.style.display = 'none';
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('id', user.id)
-        .single();
-
-      const username = profile?.username || user.email?.split("@")[0] || "User";
-      if (usernameLabel) usernameLabel.textContent = `Hi, ${username}`;
+      // Show username
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', user.id)
+          .single();
+        const username = profile?.username || user.email?.split('@')[0] || 'User';
+        usernameLabel.textContent = `Hi, ${username}`;
+      } catch {
+        usernameLabel.textContent = 'Hi, User';
+      }
 
     } else {
-      // User is not logged in:
-      // Hide the user menu and 'Get Started' buttons
-      if (userSection) userSection.style.display = 'none';
-      if (getStartedButtonDesktop) getStartedButtonDesktop.style.display = 'none';
-      if (getStartedButtonMobile) getStartedButtonMobile.style.display = 'none';
-
-      // Show login/signup buttons based on screen size (handled by your CSS)
-      if (loginSection) loginSection.style.display = 'flex';
-      if (heroGuestActionsMobile) heroGuestActionsMobile.style.display = 'flex';
-      if (usernameLabel) usernameLabel.textContent = "Hi, Guest";
+      // Guest view: show signup/login
+      avatarButton.style.display = 'none';
+      navActions.style.display = 'flex';
+      if (mobileLogin) mobileLogin.style.display = 'block';
+      if (mobileSignup) mobileSignup.style.display = 'block';
+      usernameLabel.textContent = 'Hi, Guest';
     }
   }
 
-  const { data } = await supabase.auth.getSession();
-  await handleSession(data.session);
+  // Initial load
+  const { data: { session } } = await supabase.auth.getSession();
+  await updateUI(session);
 
-  supabase.auth.onAuthStateChange((event, session) => {
-    handleSession(session);
-  });
+  // Listen for auth changes
+  supabase.auth.onAuthStateChange((_event, session) => updateUI(session));
 
-  logoutBtn?.addEventListener("click", async (e) => {
-    e.preventDefault();
+  // Logout on click
+  avatarButton.addEventListener('click', async () => {
     await supabase.auth.signOut();
-    window.location.href = "/index.html";
+    await updateUI(null); // show guest view immediately
   });
-
-  let dropdownOpen = false;
-  avatarButton?.addEventListener("click", async () => {
-    if (window.innerWidth <= 768) {
-      await supabase.auth.signOut();
-      window.location.href = "/index.html";
-      return;
-    }
-    dropdownOpen = !dropdownOpen;
-    if (dropdownOpen) {
-      userDropdown?.classList.remove("hidden");
-      requestAnimationFrame(() => userDropdown?.classList.add("show"));
-    } else {
-      userDropdown?.classList.remove("show");
-      setTimeout(() => userDropdown?.classList.add("hidden"), 200);
-    }
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!avatarButton?.contains(e.target) && !userDropdown?.contains(e.target)) {
-      userDropdown?.classList.remove("show");
-      setTimeout(() => userDropdown?.classList.add("hidden"), 200);
-      dropdownOpen = false;
-    }
-  });
-
-  // --- New Functionality: "Get Started" Button Clicks ---
-  // A helper function to open the upload box
-  function openUploadBox() {
-    if (uploadBox) {
-        uploadBox.style.display = 'flex';
-    }
-  }
-
-  // A helper function to close the upload box
-  function closeUploadBox() {
-    if (uploadBox) {
-        uploadBox.style.display = 'none';
-    }
-  }
-
-  // Event listeners for the "Get Started" buttons
-  if (getStartedButtonDesktop) {
-    getStartedButtonDesktop.addEventListener('click', openUploadBox);
-  }
-  if (getStartedButtonMobile) {
-    getStartedButtonMobile.addEventListener('click', openUploadBox);
-  }
-
-  // Event listener for the close button
-  if (closeUploadBoxBtn) {
-    closeUploadBoxBtn.addEventListener('click', closeUploadBox);
-  }
 });
