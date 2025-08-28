@@ -7,37 +7,17 @@ const supabase = createClient(
 );
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // --- Initialize counter logic ---
+  await Counter.init();
+
+  // --- Elements ---
   const typewriterTextElement = document.getElementById("typewriter-text");
   const getStartedButton = document.getElementById("getStartedButton");
   const uploadBox = document.getElementById("uploadBox");
   const codeFile = document.getElementById("codeFile");
   const uploadButton = document.getElementById("uploadButton");
-
-  let isAuthenticated = false;
-  let user = null;
-
-  // --- Check session and setup UI ---
-  try {
-    const { data } = await supabase.auth.getSession();
-    if (data.session?.user) {
-      isAuthenticated = true;
-      user = data.session.user;
-
-      // Setup logged-in avatar
-      const avatarButton = document.getElementById("avatarButton");
-      if (avatarButton) {
-        avatarButton.style.display = "block";
-        avatarButton.textContent = `Hi, ${user.email.split("@")[0]}`;
-      }
-
-      // Remove guest nav actions
-      const navActions = document.querySelector(".nav-actions");
-      if (navActions) navActions.remove();
-    }
-  } catch (err) {
-    console.error("Error fetching session:", err);
-    isAuthenticated = false; // fallback guest
-  }
+  const closeUploadBox = document.getElementById("closeUploadBox");
+  const resultBox = document.getElementById("resultBox");
 
   // --- Typewriter Effect ---
   const phrases = [
@@ -76,6 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // --- File Upload Handling ---
   uploadButton.addEventListener("click", async () => {
+    if (!Counter.canUpload()) return; // Prevent if guest/user limit reached
+
     const file = codeFile.files[0];
     if (!file) {
       alert("Please select a file first.");
@@ -89,17 +71,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const reader = new FileReader();
     reader.onload = async (e) => {
       const fileContent = e.target.result;
-      const resultBox = document.getElementById("resultBox");
 
       try {
         const response = await fetch('/api/summarize', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileContent: fileContent }),
+          body: JSON.stringify({ fileContent })
         });
 
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'Server error');
+
+        if (!response.ok) throw new Error(data.message || 'Server error.');
 
         const summaryText = data.summary;
 
@@ -112,6 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         resultBox.style.display = "block";
         resultBox.scrollIntoView({ behavior: "smooth" });
 
+        // Copy button
         const copyBtn = document.getElementById("copySummaryBtn");
         if (copyBtn) {
           copyBtn.addEventListener("click", () => {
@@ -123,6 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               .catch(() => alert("Failed to copy text."));
           });
         }
+
       } catch (error) {
         console.error("Error summarizing code:", error);
         resultBox.innerHTML = `<p style="color: red;">Failed to get summary. Please try again.</p>`;
@@ -138,19 +122,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // --- Show file name on selection ---
   codeFile.addEventListener("change", () => {
-    if (codeFile.files.length) {
-      uploadButton.textContent = "Upload & Process (" + codeFile.files[0].name + ")";
-    } else {
-      uploadButton.textContent = "Upload & Process";
-    }
+    uploadButton.textContent = codeFile.files.length
+      ? `Upload & Process (${codeFile.files[0].name})`
+      : "Upload & Process";
   });
 
-  // --- Close upload box ---
-  const closeUploadBox = document.getElementById("closeUploadBox");
+  // --- Close Upload Box ---
   closeUploadBox.addEventListener("click", () => {
     uploadBox.classList.remove("show");
     getStartedButton.style.display = "inline-block";
-    const resultBox = document.getElementById("resultBox");
     resultBox.textContent = "";
     resultBox.style.display = "none";
   });
@@ -165,7 +145,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // --- Company counter animation ---
+  // --- Mobile Menu ---
+  const navToggle = document.querySelector(".nav-toggle");
+  const mobileMenu = document.querySelector(".mobile-menu");
+  navToggle.addEventListener("click", () => mobileMenu.classList.toggle("show"));
+});
+// --- Company counter animation ---
   const companiesCounterElement = document.getElementById('companies-counter');
   const targetCount = 100;
   const duration = 2000;
@@ -193,4 +178,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, { threshold: 0.5 });
     counterObserver.observe(counterSection);
   }
-});
