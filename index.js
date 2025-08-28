@@ -1,23 +1,35 @@
-import { Counter } from './counter.js';
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-const supabase = createClient(
-  'https://obqmgqzjtvdzmcfvteyn.supabase.co',
-  'sb_publishable_Jjxl5hlVxOj1IeucdHKeXw_noPg319G'
-);
-
 document.addEventListener("DOMContentLoaded", async () => {
-  // --- Initialize counter logic ---
-  await Counter.init();
-
-  // --- Elements ---
   const typewriterTextElement = document.getElementById("typewriter-text");
   const getStartedButton = document.getElementById("getStartedButton");
   const uploadBox = document.getElementById("uploadBox");
   const codeFile = document.getElementById("codeFile");
   const uploadButton = document.getElementById("uploadButton");
-  const closeUploadBox = document.getElementById("closeUploadBox");
-  const resultBox = document.getElementById("resultBox");
+
+  let isAuthenticated = false;
+  let user = null;
+
+  // --- Check session and setup UI ---
+  try {
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.user) {
+      isAuthenticated = true;
+      user = data.session.user;
+
+      // Setup logged-in avatar
+      const avatarButton = document.getElementById("avatarButton");
+      if (avatarButton) {
+        avatarButton.style.display = "block";
+        avatarButton.textContent = `Hi, ${user.email.split("@")[0]}`;
+      }
+
+      // Remove guest nav actions
+      const navActions = document.querySelector(".nav-actions");
+      if (navActions) navActions.remove();
+    }
+  } catch (err) {
+    console.error("Error fetching session:", err);
+    isAuthenticated = false; // fallback guest
+  }
 
   // --- Typewriter Effect ---
   const phrases = [
@@ -56,8 +68,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // --- File Upload Handling ---
   uploadButton.addEventListener("click", async () => {
-    if (!Counter.canUpload()) return; // Prevent if guest/user limit reached
-
     const file = codeFile.files[0];
     if (!file) {
       alert("Please select a file first.");
@@ -71,17 +81,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const reader = new FileReader();
     reader.onload = async (e) => {
       const fileContent = e.target.result;
+      const resultBox = document.getElementById("resultBox");
 
       try {
         const response = await fetch('/api/summarize', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileContent })
+          body: JSON.stringify({ fileContent: fileContent }),
         });
 
         const data = await response.json();
-
-        if (!response.ok) throw new Error(data.message || 'Server error.');
+        if (!response.ok) throw new Error(data.message || 'Server error');
 
         const summaryText = data.summary;
 
@@ -94,7 +104,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         resultBox.style.display = "block";
         resultBox.scrollIntoView({ behavior: "smooth" });
 
-        // Copy button
         const copyBtn = document.getElementById("copySummaryBtn");
         if (copyBtn) {
           copyBtn.addEventListener("click", () => {
@@ -106,7 +115,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               .catch(() => alert("Failed to copy text."));
           });
         }
-
       } catch (error) {
         console.error("Error summarizing code:", error);
         resultBox.innerHTML = `<p style="color: red;">Failed to get summary. Please try again.</p>`;
@@ -122,15 +130,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // --- Show file name on selection ---
   codeFile.addEventListener("change", () => {
-    uploadButton.textContent = codeFile.files.length
-      ? `Upload & Process (${codeFile.files[0].name})`
-      : "Upload & Process";
+    if (codeFile.files.length) {
+      uploadButton.textContent = "Upload & Process (" + codeFile.files[0].name + ")";
+    } else {
+      uploadButton.textContent = "Upload & Process";
+    }
   });
 
-  // --- Close Upload Box ---
+  // --- Close upload box ---
+  const closeUploadBox = document.getElementById("closeUploadBox");
   closeUploadBox.addEventListener("click", () => {
     uploadBox.classList.remove("show");
     getStartedButton.style.display = "inline-block";
+    const resultBox = document.getElementById("resultBox");
     resultBox.textContent = "";
     resultBox.style.display = "none";
   });
@@ -144,9 +156,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       item.classList.toggle('active');
     });
   });
+  
+  // --- Company counter animation ---
+  const companiesCounterElement = document.getElementById('companies-counter');
+  const targetCount = 100;
+  const duration = 2000;
 
-  // --- Mobile Menu ---
-  const navToggle = document.querySelector(".nav-toggle");
-  const mobileMenu = document.querySelector(".mobile-menu");
-  navToggle.addEventListener("click", () => mobileMenu.classList.toggle("show"));
+  function animateCounter(element, target, duration) {
+    let start = 0;
+    const increment = target / (duration / 16);
+    const animate = () => {
+      start += increment;
+      element.textContent = start < target ? Math.ceil(start) : target;
+      if (start < target) requestAnimationFrame(animate);
+    };
+    animate();
+  }
+
+  const counterSection = document.querySelector('.counter-section');
+  if (counterSection && companiesCounterElement) {
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(companiesCounterElement, targetCount, duration);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    counterObserver.observe(counterSection);
+  }
 });
