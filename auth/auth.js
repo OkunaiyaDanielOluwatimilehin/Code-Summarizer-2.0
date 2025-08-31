@@ -40,17 +40,23 @@ async function signUpEmail() {
   const password = passwordInput.value;
 
   log("signUpEmail", email);
-  const { data, error } = await supabase.auth.signUp({ email, password });
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/onboarding/onboarding.html`, 
+    },
+  });
+
   if (error) {
     log("signUp error", error);
     return showToast(error.message, true);
   }
 
-  // Most projects require email confirmation: no session yet.
   showToast("Check your email to confirm your account.");
-  // After confirm the user will return and log in, so send them to login page.
-  setTimeout(() => (window.location.href = "/auth/login.html"), 600);
 }
+
 
 async function loginEmail() {
   if (!emailInput || !passwordInput) return showToast("Missing form inputs", true);
@@ -107,14 +113,23 @@ async function redirectAfterAuth() {
     .from("profiles")
     .select("onboarded")
     .eq("id", uid)
-    .single();
+    .maybeSingle(); // safer than .single()
 
   if (error) {
     log("profiles select error", error);
-    // Fail-safe: send them to onboarding if we can't read the flag.
     window.location.href = "/onboarding/onboarding.html";
     return;
   }
+
+  if (!profile || !profile.onboarded) {
+    log("Redirecting to onboarding");
+    window.location.href = "/onboarding/onboarding.html";
+  } else {
+    log("Redirecting to home");
+    window.location.href = "/index.html";
+  }
+}
+
 
   // ✅ Correct logic: if NOT onboarded, redirect to onboarding.
   if (!profile?.onboarded) {
@@ -123,7 +138,6 @@ async function redirectAfterAuth() {
     // ✅ Otherwise, redirect to the home page.
     window.location.href = "/index.html";
   }
-}
 
 // ---- WIRE UP (no HTML changes required) ----
 window.addEventListener("DOMContentLoaded", () => {

@@ -227,17 +227,27 @@ body, html {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  width: 20%; /* full-width since you used class="full-width" */
+  width: 20%; /* desktop default */
   transition: background-color 0.2s ease, transform 0.1s ease;
   margin-top: 25px;
+  text-align: center;
 }
 
+/* Hover + Active States */
 #finish-onboarding:hover {
   background-color: #0056b3; /* darker on hover */
 }
-
 #finish-onboarding:active {
   transform: scale(0.97);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  #finish-onboarding {
+    width: 100%;     /* full width on tablets + phones */
+    font-size: 14px; /* slightly smaller text */
+    padding: 12px;   /* keep padding balanced */
+  }
 }
 
 #onboarding-container {
