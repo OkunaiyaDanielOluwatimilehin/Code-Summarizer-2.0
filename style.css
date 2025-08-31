@@ -400,7 +400,7 @@ html {
   margin-top: 15px;
   padding: 12px 32px;
   font-size: 16px;
-  background: #007bff;
+  background-color: var(--color-primary);
   color: var(--color-text-light);
   border: none;
   border-radius: 8px;
@@ -408,7 +408,7 @@ html {
   transition: background 0.3s ease;
   align-self: center;
 }
-#uploadButton:hover { background: #0056b3; }
+#uploadButton:hover { background-color: var(--color-hover); }
 
 /* --- Result Box --- */
 #resultBox {
