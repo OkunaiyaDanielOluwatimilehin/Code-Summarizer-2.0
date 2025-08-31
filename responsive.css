@@ -149,3 +149,27 @@
 }
 
 
+/* About CTA Buttons - Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .about-cta {
+    display: flex;
+    flex-direction: row;      /* side by side */
+    justify-content: center;  /* center horizontally */
+    align-items: center;      /* vertical alignment */
+    gap: 12px;                /* space between buttons */
+    flex-wrap: wrap;           /* wrap if very narrow screens */
+  }
+
+  .about-btn,
+  .github-btn {
+    flex: 1;                  /* equal width */
+    max-width: 200px;         /* optional max width */
+    padding: 12px 20px;       /* same padding for both */
+    text-align: center;
+    box-sizing: border-box;    /* includes padding in width */
+  }
+
+  .github-btn i {
+    margin-right: 8px;        /* spacing for GitHub icon */
+  }
+}
