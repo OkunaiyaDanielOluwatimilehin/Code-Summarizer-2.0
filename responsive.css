@@ -97,13 +97,13 @@
 
   /* ---------- Pricing ---------- */
   .pricing-section {
-    padding: 60px 15px;
+    padding: 40px 10px;
   }
   .pricing-cards {
     grid-template-columns: 1fr;
   }
   .pricing-card {
-    padding: 30px 20px;
+    padding: 20px 15px;
   }
 
   /* ---------- FAQ ---------- */
@@ -171,3 +171,182 @@
   }
 }
 
+/* 📱 Small screens */
+@media (max-width: 480px) {
+  .url-input {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .url-box .btn.secondary {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* ========== Mobile Responsiveness ========== */
+@media (max-width: 768px) {
+  /* Input + URL Box */
+  .url-box {
+    gap: 8px;
+    margin-bottom: 1rem;
+    padding: 0 1rem; /* add breathing room on small screens */
+  }
+
+  .url-input {
+    font-size: 0.9rem;
+    padding: 30px 20px;
+    margin-top: 50px;
+    max-width: 150%; /* don’t lock to 700px */
+  }
+
+  /* Result Box */
+  #resultBox {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .summary-output p {
+    font-size: 1.2rem; /* scale text down for readability */
+    line-height: 1.4;
+  }
+
+  .copy-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  /* Pricing Card */
+  .pricing-card.featured {
+    transform: none; /* avoid breaking small screen layouts */
+    border-width: 1px;
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    top: -10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-output p {
+    font-size: 1rem;
+  }
+
+  .url-input {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+
+  .copy-btn {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.7rem;
+  }
+}
+
+
+/* ========== Mobile & Tablet Responsiveness ========== */
+@media (max-width: 1024px) {
+  .upload-box {
+    width: 90%;
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .upload-area {
+    padding: 25px;
+  }
+
+  .upload-area p,
+  .upload-area span {
+    font-size: 16px;
+  }
+
+  #uploadButton {
+    font-size: 15px;
+    padding: 10px 24px;
+  }
+
+  .summary-output p {
+    font-size: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .counter-display {
+    font-size: 4rem;
+  }
+  .counter-display span:last-child {
+    font-size: 2.5rem;
+  }
+  .counter-content p {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-box {
+    width: 95%;
+    margin: 20px auto;
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .upload-area {
+    padding: 20px;
+  }
+
+  .upload-area p,
+  .upload-area span {
+    font-size: 15px;
+  }
+
+  #uploadButton {
+    width: 100%; /* button spans container */
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .summary-output p {
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+
+  .copy-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .counter-section {
+    padding: 50px 15px;
+  }
+  .counter-display {
+    font-size: 3rem;
+  }
+  .counter-display span:last-child {
+    font-size: 2rem;
+  }
+  .counter-content p {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-area {
+    padding: 25px;
+  }
+
+  .upload-area p,
+  .upload-area span {
+    font-size: 14px;
+  }
+
+  .summary-output p {
+    font-size: 1rem;
+  }
+}

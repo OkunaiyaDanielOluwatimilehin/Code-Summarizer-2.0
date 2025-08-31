@@ -322,62 +322,6 @@ html {
 .username-label { font-size: 15px; font-weight: 500; }
 .avatar-button i { font-size: 1.8rem; color: var(--color-text-light); transition: transform 0.3s ease; }
 
-/* --- Dropdown Menu --- */
-.user-dropdown {
-  position: absolute;
-  right: 0;
-  top: 100%;
-  margin-top: 10px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  padding: 10px 0;
-  min-width: 200px;
-  z-index: 999;
-  margin-right: 14px;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-.user-dropdown.show {
-  opacity: 1;
-}
-
-.user-dropdown .dropdown-header {
-  padding: 10px 16px;
-  font-weight: 600;
-  font-size: 16px;
-  border-bottom: 1px solid #eee;
-  color: #333;
-}
-
-.dropdown-menu { list-style: none; padding: 0; margin: 0; }
-.dropdown-menu li { border-top: 1px solid #f0f0f0; }
-.dropdown-menu li:first-child { border-top: none; }
-
-.dropdown-menu li a {
-  display: block;
-  padding: 12px 16px;
-  font-size: 18px;
-  color: #333;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.dropdown-menu li a:hover {
-  font-weight: 900;
-  background: #f5f7fa;
-  color: #111;
-  font-size: 16px;
-}
-
-.dropdown-menu i {
-  font-size: 12px;
-  color: black;
-  margin-right: 10px;
-}
-
 /* --- Toast Notification --- */
 .toast {
   position: fixed;
@@ -472,8 +416,8 @@ html {
 }
 
 .summary-output p {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 1rem;
+  font-family: 'league spartan', sans-serif;
+  font-size: 2rem;
   line-height: 1.6;
   color: #333;
   white-space: pre-wrap;
@@ -914,40 +858,46 @@ html {
   color: #FF4C4C;
   font-weight: 600;
 }
+
 .url-box {
   display: flex;
   flex-direction: column;
-  align-items: center;      /* centers input + button */
+  align-items: center;  /* centers input + button */
   gap: 10px;
   margin-bottom: 1.5rem;
+  width: 100%;
 }
 
+/* Input field */
 .url-input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 12px 15px;
+  border-radius: 7px;
+  border: 0.5px solid #ddd;
+  outline: dashed #ccc 2px;
   font-size: 1rem;
   width: 100%;
-  max-width: 500px;    
-  margin-top: 60px;   
+  max-width: 700px;
+  margin-top: 50px;
+  box-sizing: border-box;
+  /* subtle shadow + smooth transition */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.url-box .btn.secondary {
-  background-color: var(--color-primary);  /* 🔴 red accent color */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  margin-top: 20px;
-  margin-bottom: 2px;
+/* placeholder text */
+.url-input::placeholder {
+  color: #999;
+  font-style: italic;
 }
 
-.url-box .btn.secondary:hover {
-  background-color: #e04343; /* darker red on hover */
+/* focus state */
+.url-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(255, 76, 76, 0.2); /* matches red accent */
 }
+
+
+
+
 
 
 
