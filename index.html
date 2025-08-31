@@ -87,6 +87,14 @@
               </div>
                 <!-- Upload Box -->
                 <div class="upload-box" id="uploadBox">
+                        <div class="url-box">
+        <input 
+          type="text" 
+          id="urlInput" 
+          placeholder="Paste a link to summarize..." 
+          class="url-input"/>
+        <button id="urlButton" class="btn secondary">Summarize Link</button>
+      </div>
                   
                   <label for="codeFile" class="upload-label">
                     <div class="upload-area">
@@ -102,10 +110,13 @@
                   <div class="result-box" id="resultBox"></div>
                   <button id="closeUploadBox" class="close-box"></button>              
                 </div> 
+                <!-- URL Summarizer -->
+
+
                 <div id="uploadCounterContainer">
                   <span id="uploadCounterText">Uploads left: 1</span>
                 </div>
-                <div id="guestUploadMessage" style="display:none; color:#FF4C4C; margin-top:5px; font-size:0.9rem;">
+                <div id="guestUploadMessage" style="display:none; color:white; margin-top:5px; font-size:1.5rem; margin-top: 10px;">
                   Guest upload used — please sign up to continue.
                 </div>                
           </div>

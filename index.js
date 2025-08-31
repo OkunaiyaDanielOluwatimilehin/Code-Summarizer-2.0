@@ -178,3 +178,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, { threshold: 0.5 });
     counterObserver.observe(counterSection);
   }
+
+    // --- URL Summarization Handling ---
+    const urlInput = document.getElementById("urlInput");
+    const urlButton = document.getElementById("urlButton");
+  
+    if (urlButton) {
+      urlButton.addEventListener("click", async () => {
+        const url = urlInput.value.trim();
+        if (!url) {
+          resultBox.innerHTML = "<p style='color:red;'>⚠️ Please enter a valid link.</p>";
+          resultBox.style.display = "block";
+          return;
+        }
+  
+        const originalButtonText = urlButton.textContent;
+        urlButton.textContent = "Processing...";
+        urlButton.disabled = true;
+        resultBox.innerHTML = "<p>⏳ Summarizing link...</p>";
+        resultBox.style.display = "block";
+  
+        try {
+          const response = await fetch('/api/summarize-link.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          });
+  
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.message || 'Server error.');
+  
+          const summaryText = data.summary;
+  
+          resultBox.innerHTML = `
+            <div class="summary-output">
+              <p>${summaryText}</p>
+              <button id="copySummaryBtn" class="copy-btn">Copy</button>
+            </div>
+          `;
+          resultBox.scrollIntoView({ behavior: "smooth" });
+  
+          // Copy button
+          const copyBtn = document.getElementById("copySummaryBtn");
+          if (copyBtn) {
+            copyBtn.addEventListener("click", () => {
+              navigator.clipboard.writeText(summaryText)
+                .then(() => {
+                  copyBtn.textContent = "Copied!";
+                  setTimeout(() => copyBtn.textContent = "Copy", 2000);
+                })
+                .catch(() => alert("Failed to copy text."));
+            });
+          }
+  
+        } catch (error) {
+          console.error("Error summarizing link:", error);
+          resultBox.innerHTML = `<p style="color:red;">❌ Failed to get summary. Please try again.</p>`;
+        } finally {
+          urlButton.textContent = originalButtonText;
+          urlButton.disabled = false;
+        }
+      });
+    }
+  
