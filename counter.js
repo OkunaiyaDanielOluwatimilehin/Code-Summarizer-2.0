@@ -12,10 +12,12 @@ export const Counter = {
   uploadCounterText: null,
   guestUploadMessage: null,
   uploadButton: null,
+  urlInput: null, // track pasted link
 
   async init() {
     this.uploadCounterText = document.getElementById("uploadCounterText");
     this.uploadButton = document.getElementById("uploadButton");
+    this.urlInput = document.getElementById("urlInput"); // your paste box
     this.guestUploadMessage = document.getElementById("guestUploadMessage");
 
     try {
@@ -25,32 +27,48 @@ export const Counter = {
       console.error("Error fetching session:", err);
     }
 
-    this.MAX_UPLOADS = this.user ? 10 : 1;
+    // 5 uploads per month for logged in users, 1 for guests
+    this.MAX_UPLOADS = this.user ? 5 : 1;
     await this.fetchCount();
     this.updateUI();
 
-    // Hook into upload button to increment count
-    this.uploadButton.addEventListener("click", async () => {
-      if (!this.canUpload()) {
-        alert(this.user 
-          ? "You have reached your monthly upload limit of 10."
-          : "Guest uploads exhausted. Please sign up to continue.");
-        return;
-      }
+    // Handle button click (works for both file & link)
+    if (this.uploadButton) {
+      this.uploadButton.addEventListener("click", async () => {
+        const url = this.urlInput?.value.trim();
 
-      this.uploadCount++;
+        if (url) {
+          // pasted link case
+          await this.handleUpload("url");
+        } else {
+          // file upload case
+          await this.handleUpload("file");
+        }
+      });
+    }
+  },
 
-      if (this.user) {
-        await supabase
-          .from("profiles")
-          .update({ monthly_uploads_count: this.uploadCount })
-          .eq("id", this.user.id);
-      } else {
-        localStorage.setItem("guestUploadCount", this.uploadCount);
-      }
+  async handleUpload(type) {
+    if (!this.canUpload()) {
+      alert(this.user 
+        ? `You have reached your monthly limit of ${this.MAX_UPLOADS}.`
+        : "Guest uploads exhausted. Please sign up to continue.");
+      return;
+    }
 
-      this.updateUI();
-    });
+    this.uploadCount++;
+
+    if (this.user) {
+      await supabase
+        .from("profiles")
+        .update({ monthly_uploads_count: this.uploadCount })
+        .eq("id", this.user.id);
+    } else {
+      localStorage.setItem("guestUploadCount", this.uploadCount);
+    }
+
+    console.log(`Upload recorded (${type}). New count: ${this.uploadCount}`);
+    this.updateUI();
   },
 
   async fetchCount() {
