@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     showResult("⏳ Summarizing link...");
 
     try {
-      const response = await fetch('/api/summarize-link.js', {
+      const response = await fetch('/api/summarize-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
@@ -247,39 +247,4 @@ if (counterSection && companiesCounterElement) {
   }, { threshold: 0.5 });
   counterObserver.observe(counterSection);
 }
-function insertMobileAuthButtons() {
-  // Only insert on mobile
-  if (window.innerWidth < 1024) {
-      // Check if already added
-      if (!document.querySelector('.mobile-auth-buttons')) {
-          const authContainer = document.querySelector('.auth-button');
-          if (!authContainer) return; // safety check
-
-          // Create container div
-          const div = document.createElement('div');
-          div.className = 'mobile-auth-buttons';
-
-          // Add the inner HTML
-          div.innerHTML = `
-              <ul>
-                  <a href="./auth/login.html" class="btn-login-mobile">Login</a>
-                  <a href="./auth/signup.html" class="btn-primary-mobile">Sign Up</a>
-              </ul>
-          `;
-
-          // Append to the auth-button container
-          authContainer.appendChild(div);
-      }
-  } else {
-      // Remove on desktop
-      const existing = document.querySelector('.mobile-auth-buttons');
-      if (existing) existing.remove();
-  }
-}
-
-// Run on page load
-document.addEventListener('DOMContentLoaded', insertMobileAuthButtons);
-
-// Run on window resize
-window.addEventListener('resize', insertMobileAuthButtons);
 });
