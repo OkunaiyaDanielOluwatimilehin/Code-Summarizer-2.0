@@ -103,3 +103,25 @@ export const Counter = {
     return this.uploadCount < this.MAX_UPLOADS;
   }
 };
+
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const resultContent = document.getElementById("resultBox").innerText.trim();
+  if (!resultContent) {
+    alert("⚠️ No result to export.");
+    return;
+  }
+
+  // Ask user for file type
+  const fileType = prompt("Export as 'txt' or 'md' (README)?", "md");
+  const ext = fileType === "txt" ? "txt" : "md"; // default to md
+
+  // Create blob
+  const blob = new Blob([resultContent], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `summary.${ext}`;
+  link.click();
+
+  // cleanup
+  URL.revokeObjectURL(link.href);
+});

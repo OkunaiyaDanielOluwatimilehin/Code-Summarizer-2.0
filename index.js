@@ -89,6 +89,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           <div class="summary-output">
             <p>${summaryText}</p>
             <button id="copySummaryBtn" class="copy-btn">Copy</button>
+            <button id="exportTxtBtn" class="copy-btn">Export TXT</button>
+            <button id="exportMdBtn" class="copy-btn">Export MD</button>
           </div>
         `;
         resultBox.style.display = "block";
@@ -119,6 +121,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
     reader.readAsText(file);
   });
+
+  // Export TXT button
+const exportTxtBtn = document.createElement("button");
+exportTxtBtn.textContent = "Export TXT";
+exportTxtBtn.className = "copy-btn";
+exportTxtBtn.addEventListener("click", () => {
+  const blob = new Blob([summaryText], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "summary.txt";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+
+// Export MD button
+const exportMdBtn = document.createElement("button");
+exportMdBtn.textContent = "Export MD";
+exportMdBtn.className = "copy-btn";
+exportMdBtn.addEventListener("click", () => {
+  const blob = new Blob([summaryText], { type: "text/markdown" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "summary.md";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+
+// Append both buttons to the summary-output container
+const summaryContainer = resultBox.querySelector(".summary-output");
+if (summaryContainer) {
+  summaryContainer.appendChild(exportTxtBtn);
+  summaryContainer.appendChild(exportMdBtn);
+}
+
 
   // --- Show file name on selection ---
   codeFile.addEventListener("change", () => {
@@ -213,6 +249,8 @@ if (uploadButton) {
         <div class="summary-output">
           <p>${summaryText}</p>
           <button id="copySummaryBtn" class="copy-btn">Copy</button>
+            <button id="exportTxtBtn" class="copy-btn">Export TXT</button>
+            <button id="exportMdBtn" class="copy-btn">Export MD</button>
         </div>
       `;
       resultBox.scrollIntoView({ behavior: "smooth" });
@@ -238,4 +276,38 @@ if (uploadButton) {
       uploadButton.disabled = false;
     }
   });
+
+  // Export TXT button
+const exportTxtBtn = document.createElement("button");
+exportTxtBtn.textContent = "Export TXT";
+exportTxtBtn.className = "copy-btn";
+exportTxtBtn.addEventListener("click", () => {
+  const blob = new Blob([summaryText], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "summary.txt";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+
+// Export MD button
+const exportMdBtn = document.createElement("button");
+exportMdBtn.textContent = "Export MD";
+exportMdBtn.className = "copy-btn";
+exportMdBtn.addEventListener("click", () => {
+  const blob = new Blob([summaryText], { type: "text/markdown" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "summary.md";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+
+// Append both buttons to the summary-output container
+const summaryContainer = resultBox.querySelector(".summary-output");
+if (summaryContainer) {
+  summaryContainer.appendChild(exportTxtBtn);
+  summaryContainer.appendChild(exportMdBtn);
+}
+
 }
