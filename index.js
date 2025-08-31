@@ -1,260 +1,217 @@
 import { Counter } from './counter.js';
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import './supabase.js';
 
-const supabase = createClient(
-  'https://obqmgqzjtvdzmcfvteyn.supabase.co',
-  'sb_publishable_Jjxl5hlVxOj1IeucdHKeXw_noPg319G'
-);
+// --- Global helper function for file downloads ---
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
+// --- Mobile Auth Buttons ---
+function insertMobileAuthButtons() {
+  const authContainer = document.querySelector('.auth-button');
+  if (!authContainer) return;
+
+  let existing = authContainer.querySelector('.mobile-auth-buttons');
+  if (window.innerWidth < 1024) {
+    if (!existing) {
+      const div = document.createElement('div');
+      div.className = 'mobile-auth-buttons';
+      div.innerHTML = `
+        <ul>
+          <a href="./auth/login.html" class="btn-login-mobile">Login</a>
+          <a href="./auth/signup.html" class="btn-primary-mobile">Sign Up</a>
+        </ul>`;
+      authContainer.appendChild(div);
+    }
+  } else if (existing) {
+    existing.remove();
+  }
+}
+
+// --- Main App ---
 document.addEventListener("DOMContentLoaded", async () => {
-  // --- Initialize counter logic ---
   await Counter.init();
 
-  // --- Elements ---
-  const typewriterTextElement = document.getElementById("typewriter-text");
-  const getStartedButton = document.getElementById("getStartedButton");
-  const uploadBox = document.getElementById("uploadBox");
-  const codeFile = document.getElementById("codeFile");
-  const uploadButton = document.getElementById("uploadButton");
-  const closeUploadBox = document.getElementById("closeUploadBox");
-  const resultBox = document.getElementById("resultBox");
+  const elements = {
+    typewriterText: document.getElementById("typewriter-text"),
+    getStartedButton: document.getElementById("getStartedButton"),
+    uploadBox: document.getElementById("uploadBox"),
+    codeFile: document.getElementById("codeFile"),
+    uploadButton: document.getElementById("uploadButton"),
+    closeUploadBox: document.getElementById("closeUploadBox"),
+    resultBox: document.getElementById("resultBox"),
+    urlInput: document.getElementById("urlInput"),
+    urlButton: document.getElementById("urlButton"),
+    companiesCounter: document.getElementById('companies-counter'),
+    counterSection: document.querySelector('.counter-section'),
+    faqItems: document.querySelectorAll('.faq-item'),
+    avatarButton: document.getElementById('avatarButton'),
+  };
 
-  // --- Typewriter Effect ---
-  const phrases = [
-    "Powered by cutting-edge AI.",
-    "Making code accessible to everyone.",
-    "Your ultimate code understanding companion.",
-    "Efficient, accurate, and instant."
-  ];
-  let phraseIndex = 0, charIndex = 0, isDeleting = false;
-  const typingSpeed = 100, deletingSpeed = 50, delayBetweenPhrases = 1500;
+  insertMobileAuthButtons();
+  window.addEventListener("resize", insertMobileAuthButtons);
 
-  function typeWriterEffect() {
-    const currentPhrase = phrases[phraseIndex];
-    typewriterTextElement.textContent = isDeleting
-      ? currentPhrase.substring(0, charIndex--)
-      : currentPhrase.substring(0, ++charIndex);
+  // --- Result Display ---
+  function showResult(text, isError = false) {
+    const message = isError ? `<p style="color:red;">${text}</p>` : `<p>${text}</p>`;
+    elements.resultBox.innerHTML = `
+      <div class="summary-output">
+        ${message}
+        ${!isError ? `
+          <div class="export-buttons">
+            <button id="exportTxtBtn" class="export-btn">Export as .txt</button>
+            <button id="exportReadmeBtn" class="export-btn">Export as README</button>
+          </div>
+          <button id="copySummaryBtn" class="copy-btn">Copy</button>
+        ` : ''}
+      </div>`;
+    elements.resultBox.style.display = "block";
+    elements.resultBox.scrollIntoView({ behavior: "smooth" });
 
-    if (!isDeleting && charIndex === currentPhrase.length) {
-      isDeleting = true;
-      setTimeout(typeWriterEffect, delayBetweenPhrases);
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-      setTimeout(typeWriterEffect, 500);
-    } else {
-      setTimeout(typeWriterEffect, isDeleting ? deletingSpeed : typingSpeed);
+    if (!isError) {
+      const summaryText = text;
+      document.getElementById("exportTxtBtn")?.addEventListener("click", () =>
+        downloadFile(summaryText, "summary.txt", "text/plain")
+      );
+      document.getElementById("exportReadmeBtn")?.addEventListener("click", () =>
+        downloadFile(`# Code Summary\n\n${summaryText}`, "README.md", "text/markdown")
+      );
+      const copyBtn = document.getElementById("copySummaryBtn");
+      copyBtn?.addEventListener("click", () => {
+        navigator.clipboard.writeText(summaryText);
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => copyBtn.textContent = "Copy", 2000);
+      });
     }
   }
-  if (typewriterTextElement) typeWriterEffect();
 
-  // --- Upload Box Toggle ---
-  getStartedButton.addEventListener("click", () => {
-    getStartedButton.style.display = "none";
-    uploadBox.classList.add("show");
-  });
+  // --- Summarize (File or URL) ---
+  async function summarize({ fileContent, url }) {
+    if (fileContent && !Counter.canUpload()) return;
 
-  // --- File Upload Handling ---
-  uploadButton.addEventListener("click", async () => {
-    if (!Counter.canUpload()) return; // Prevent if guest/user limit reached
+    const button = fileContent ? elements.uploadButton : elements.urlButton;
+    const originalText = button.textContent;
+    button.textContent = "Processing...";
+    button.disabled = true;
+    showResult(fileContent ? "⏳ Summarizing file..." : "⏳ Summarizing link...");
 
-    const file = codeFile.files[0];
-    if (!file) {
-      alert("Please select a file first.");
-      return;
+    try {
+      const response = await fetch(fileContent ? '/api/summarize' : '/api/summarize-link.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fileContent ? { fileContent } : { url })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Server error.");
+
+      showResult(data.summary);
+    } catch (err) {
+      console.error(err);
+      showResult("❌ Failed to get summary. Please try again.", true);
+    } finally {
+      button.textContent = originalText;
+      button.disabled = false;
+      if (fileContent) elements.codeFile.value = "";
     }
+  }
 
-    const originalButtonText = uploadButton.textContent;
-    uploadButton.textContent = "Processing...";
-    uploadButton.disabled = true;
-
+  elements.uploadButton?.addEventListener("click", () => {
+    const file = elements.codeFile.files[0];
+    if (!file) return alert("Please select a file first.");
     const reader = new FileReader();
-    reader.onload = async (e) => {
-      const fileContent = e.target.result;
-
-      try {
-        const response = await fetch('/api/summarize', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileContent })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) throw new Error(data.message || 'Server error.');
-
-        const summaryText = data.summary;
-
-        resultBox.innerHTML = `
-          <div class="summary-output">
-            <p>${summaryText}</p>
-            <button id="copySummaryBtn" class="copy-btn">Copy</button>
-          </div>
-        `;
-        resultBox.style.display = "block";
-        resultBox.scrollIntoView({ behavior: "smooth" });
-
-        // Copy button
-        const copyBtn = document.getElementById("copySummaryBtn");
-        if (copyBtn) {
-          copyBtn.addEventListener("click", () => {
-            navigator.clipboard.writeText(summaryText)
-              .then(() => {
-                copyBtn.textContent = "Copied!";
-                setTimeout(() => copyBtn.textContent = "Copy", 2000);
-              })
-              .catch(() => alert("Failed to copy text."));
-          });
-        }
-
-      } catch (error) {
-        console.error("Error summarizing code:", error);
-        resultBox.innerHTML = `<p style="color: red;">Failed to get summary. Please try again.</p>`;
-        resultBox.style.display = "block";
-      } finally {
-        uploadButton.textContent = originalButtonText;
-        uploadButton.disabled = false;
-        codeFile.value = "";
-      }
-    };
+    reader.onload = e => summarize({ fileContent: e.target.result });
     reader.readAsText(file);
   });
 
-  // --- Show file name on selection ---
-  codeFile.addEventListener("change", () => {
-    uploadButton.textContent = codeFile.files.length
-      ? `Upload & Process (${codeFile.files[0].name})`
+  elements.urlButton?.addEventListener("click", () => {
+    const url = elements.urlInput.value.trim();
+    if (!url) return showResult("⚠️ Please enter a valid link.", true);
+    summarize({ url });
+  });
+
+  elements.codeFile?.addEventListener("change", () => {
+    elements.uploadButton.textContent = elements.codeFile.files.length
+      ? `Upload & Process (${elements.codeFile.files[0].name})`
       : "Upload & Process";
   });
 
-  // --- Close Upload Box ---
-  closeUploadBox.addEventListener("click", () => {
-    uploadBox.classList.remove("show");
-    getStartedButton.style.display = "inline-block";
-    resultBox.textContent = "";
-    resultBox.style.display = "none";
+  elements.closeUploadBox?.addEventListener("click", () => {
+    elements.uploadBox.classList.remove("show");
+    elements.getStartedButton.style.display = "inline-block";
+    elements.resultBox.textContent = "";
+    elements.resultBox.style.display = "none";
   });
 
-  // --- FAQ toggle ---
-  const faqItems = document.querySelectorAll('.faq-item');
-  faqItems.forEach(item => {
+  elements.getStartedButton?.addEventListener("click", () => {
+    elements.getStartedButton.style.display = "none";
+    elements.uploadBox.classList.add("show");
+  });
+
+  elements.avatarButton?.addEventListener('click', e => {
+    e.preventDefault();
+    localStorage.removeItem('authToken');
+    window.location.href = '/';
+  });
+
+  // --- Typewriter Effect ---
+  if (elements.typewriterText) {
+    const phrases = [
+      "Powered by cutting-edge AI.",
+      "Making code accessible to everyone.",
+      "Your ultimate code understanding companion.",
+      "Efficient, accurate, and instant."
+    ];
+    let phraseIndex = 0, charIndex = 0, isDeleting = false;
+    const typingSpeed = 100, deletingSpeed = 50, delayBetweenPhrases = 1500;
+
+    const typeWriter = () => {
+      const current = phrases[phraseIndex];
+      elements.typewriterText.textContent = isDeleting
+        ? current.substring(0, charIndex--)
+        : current.substring(0, ++charIndex);
+
+      if (!isDeleting && charIndex === current.length) {
+        isDeleting = true;
+        setTimeout(typeWriter, delayBetweenPhrases);
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        setTimeout(typeWriter, 500);
+      } else {
+        setTimeout(typeWriter, isDeleting ? deletingSpeed : typingSpeed);
+      }
+    };
+    typeWriter();
+  }
+
+  // --- FAQ Toggle ---
+  elements.faqItems.forEach(item => {
     const question = item.querySelector('.faq-question');
-    question.addEventListener('click', () => {
-      faqItems.forEach(i => { if (i !== item) i.classList.remove('active'); });
+    question?.addEventListener('click', () => {
+      elements.faqItems.forEach(i => i !== item && i.classList.remove('active'));
       item.classList.toggle('active');
     });
   });
 
-  // --- Mobile Menu ---
-  const navToggle = document.querySelector(".nav-toggle");
-  const mobileMenu = document.querySelector(".mobile-menu");
-  navToggle.addEventListener("click", () => mobileMenu.classList.toggle("show"));
-});
-// --- Company counter animation ---
-  const companiesCounterElement = document.getElementById('companies-counter');
-  const targetCount = 100;
+  // --- Company Counter ---
+  const target = 100;
   const duration = 2000;
-
-  function animateCounter(element, target, duration) {
+  if (elements.companiesCounter) {
     let start = 0;
     const increment = target / (duration / 16);
     const animate = () => {
       start += increment;
-      element.textContent = start < target ? Math.ceil(start) : target;
+      elements.companiesCounter.textContent = Math.min(Math.floor(start), target);
       if (start < target) requestAnimationFrame(animate);
     };
     animate();
   }
-
-  const counterSection = document.querySelector('.counter-section');
-  if (counterSection && companiesCounterElement) {
-    const counterObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animateCounter(companiesCounterElement, targetCount, duration);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
-    counterObserver.observe(counterSection);
-  }
-
-    // --- URL Summarization Handling ---
-    const urlInput = document.getElementById("urlInput");
-    const urlButton = document.getElementById("urlButton");
-  
-    if (urlButton) {
-      urlButton.addEventListener("click", async () => {
-        const url = urlInput.value.trim();
-        if (!url) {
-          resultBox.innerHTML = "<p style='color:red;'>⚠️ Please enter a valid link.</p>";
-          resultBox.style.display = "block";
-          return;
-        }
-  
-        const originalButtonText = urlButton.textContent;
-        urlButton.textContent = "Processing...";
-        urlButton.disabled = true;
-        resultBox.innerHTML = "<p>⏳ Summarizing link...</p>";
-        resultBox.style.display = "block";
-  
-        try {
-          const response = await fetch('/api/summarize-link.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url })
-          });
-  
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.message || 'Server error.');
-  
-          const summaryText = data.summary;
-  
-          resultBox.innerHTML = `
-            <div class="summary-output">
-              <p>${summaryText}</p>
-              <button id="copySummaryBtn" class="copy-btn">Copy</button>
-            </div>
-          `;
-          resultBox.scrollIntoView({ behavior: "smooth" });
-  
-          // Copy button
-          const copyBtn = document.getElementById("copySummaryBtn");
-          if (copyBtn) {
-            copyBtn.addEventListener("click", () => {
-              navigator.clipboard.writeText(summaryText)
-                .then(() => {
-                  copyBtn.textContent = "Copied!";
-                  setTimeout(() => copyBtn.textContent = "Copy", 2000);
-                })
-                .catch(() => alert("Failed to copy text."));
-            });
-          }
-  
-        } catch (error) {
-          console.error("Error summarizing link:", error);
-          resultBox.innerHTML = `<p style="color:red;">❌ Failed to get summary. Please try again.</p>`;
-        } finally {
-          urlButton.textContent = originalButtonText;
-          urlButton.disabled = false;
-        }
-      });
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      // This finds the button you want to click
-      const avatarButton = document.getElementById('avatarButton');
-      
-      // Check if the button exists before adding the listener
-      if (avatarButton) {
-          avatarButton.addEventListener('click', (e) => {
-              // Prevent the default button action
-              e.preventDefault();
-              
-              // This is the line that logs the user out
-              localStorage.removeItem('authToken');
-              
-              // This reloads the page to show the logged-out state
-              window.location.href = '/';
-          });
-      }
-  });
+});

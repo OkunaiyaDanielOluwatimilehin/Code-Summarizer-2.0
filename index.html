@@ -48,30 +48,7 @@
     <a href="./auth/login.html" class="btn-login">Login</a>
     <a href="./auth/signup.html" class="btn-primary">Sign Up</a>
   </div>
-
-  <button class="nav-toggle" id="nav-toggle">☰</button>
 </nav>
-
-<div class="mobile-menu" id="mobile-menu-container">
-    <div id="mobile-menu-logged-out">
-        <ul>
-            <li><a href="#faq-section">Features</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="./auth/login.html" class="btn-login">Login</a></li>
-            <li><a href="./auth/signup.html" class="btn-primary">Sign Up</a></li>
-        </ul>
-    </div>
-    
-    <div id="mobile-menu-logged-in" class="hidden" style="display:none;">
-        <ul>
-            <li><a href="#faq-section">Features</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#about">About</a></li>
-            <li id="mobileLogout"><a href="#">Logout</a></li>
-        </ul>
-    </div>
-</div>
 
 <!-- 🔹 Main Content (initially hidden) -->
   <div id="mainContent"> 
@@ -87,12 +64,7 @@
               <p>Seamlessly transform complex code into concise, <br> human-readable summaries powered by advanced AI. <br>Perfect for students, developers, and learners.</p>
 
               <div class="hero-buttons">
-                <div class="mobile-auth-buttons">
-                  <ul>
-                      <li><a href="./auth/login.html" class="btn-login-mobile">Login</a></li>
-                      <li><a href="./auth/signup.html" class="btn-primary-mobile">Sign Up</a></li>
-                  </ul>
-              </div>
+                <div class="auth-button"></div>
                 <button id="getStartedButton" class="btn primary">
                   Get Started <i class="fas fa-arrow-right"></i>
                 </button>
@@ -120,10 +92,12 @@
                 
                   <button id="uploadButton" class="btn secondary">Summarize</button>
                   <div class="result-box" id="resultBox">
-                    <div class="export-buttons"></div>
+                    <div class="export-buttons">
                       <button id="exportTxtBtn" class="export-btn">Export as .txt</button>
                       <button id="exportReadmeBtn" class="export-btn">Export as README</button>
                     </div>
+                    </div>
+                      
                   </div>
                             
                 </div> 

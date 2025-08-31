@@ -66,9 +66,12 @@ html {
 /* ================= NAVBAR STYLES ================= */
 /* ====== Navbar ====== */
 /* ====== Navbar ====== */
+/* ================= NAVBAR STYLES ================= */
 #navbar {
   background-color: transparent;
-  width: 100%;
+  width: 100%; /* full width for desktop */
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px 50px;
   display: flex;
   align-items: center;
@@ -79,66 +82,86 @@ html {
   box-sizing: border-box;
 }
 
-/* 3-column layout */
-#navbar .logo-link {
+/* ---- Logo ---- */
+.logo-link {
   flex: 1;
+  text-decoration: none;
+  color: inherit;
 }
-#navbar .nav-links {
-  flex: 1;
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+}
+.code {
+  font-weight: bold;
+  color: white;
+  font-size: 30px;
+}
+.summarizer-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.2em;
+}
+.summarizer {
+  transform: translateY(-100%);
+  opacity: 0;
+  animation: slideDown 1s ease-out 0.5s forwards;
+  color: white;
+  font-size: 14px;
+}
+.version {
+  background: #FF4C4C;
+  color: white;
+  font-size: 0.5rem;
+  padding: 0.2em 0.6em;
+  border-radius: 2px;
+  transform: translateX(-150%);
+  opacity: 0;
+  animation: slideInLeft 1s ease-out 1.2s forwards;
+}
+
+/* ---- Links ---- */
+.nav-links {
+  flex: 2; /* center column wider */
   display: flex;
   justify-content: center;
   gap: 2rem;
   list-style: none;
 }
-#navbar .nav-actions {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-/* ---- Logo ---- */
-.logo-link { text-decoration: none; color: inherit; }
-.logo { display: flex; flex-direction: column; align-items: flex-start; cursor: pointer; }
-.code { font-weight: bold; color: white; font-size: 30px; }
-.summarizer-line { display: flex; align-items: center; gap: 0.5em; margin-top: 0.2em; }
-.summarizer {
-  transform: translateY(-100%); opacity: 0;
-  animation: slideDown 1s ease-out 0.5s forwards;
-  color: white; font-size: 14px;
-}
-.version {
-  background: #FF4C4C; color: white; font-size: 0.5rem;
-  padding: 0.2em 0.6em; border-radius: 2px;
-  transform: translateX(-150%); opacity: 0;
-  animation: slideInLeft 1s ease-out 1.2s forwards;
-}
-
-/* Animations */
-@keyframes slideDown { to { transform: translateY(0); opacity: 1; } }
-@keyframes slideInLeft { to { transform: translateX(0); opacity: 1; } }
-
-/* ---- Links ---- */
 .nav-links li a {
   text-decoration: none;
   color: white;
   font-weight: 500;
   transition: color 0.2s ease;
 }
-.nav-links li a:hover { color: #FF4C4C; }
+.nav-links li a:hover {
+  color: #FF4C4C;
+}
 
-/* ---- Right Side ---- */
+/* ---- Right Side Buttons ---- */
+.nav-actions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.nav-actions a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .btn-login {
   color: white;
-  text-decoration: none;
-  /* font-weight: 00; */
-  padding: 2px 60px;   /* balanced rectangle */
+  padding: 8px 25px;  /* balanced rectangle */
   border: 1px solid #fff;
-  border-radius: 4px;   /* softer corners */
+  border-radius: 4px;
   background: transparent;
   transition: all 0.2s ease;
 }
-
 .btn-login:hover {
   border: none;
   background-color: #FF4C4C;
@@ -147,62 +170,28 @@ html {
 .btn-primary {
   background: #FF4C4C;
   color: white;
-  padding: 17px 70px;   /* larger and bolder */
+  padding: 12px 35px;   /* bigger and bolder */
   border-radius: 4px;
   text-decoration: none;
   font-weight: 600;
   transition: background 0.2s ease;
 }
-
 .btn-primary:hover {
   background: #e04444;
 }
 
-/* ---- Mobile ---- */
-.nav-toggle {
-  display: none; /* Hide on larger screens */
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000; /* Ensure it's on top of other content */
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 2rem;
-  cursor: pointer;
+/* ---- Animations ---- */
+@keyframes slideDown {
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideInLeft {
+  to { transform: translateX(0); opacity: 1; }
 }
 
-.mobile-menu {
-  position: fixed;
-    top: 0;
-    right: 0;
-    width: 250px;
-    height: 100%;
-    background-color: var(--color-background-dark);
-    padding: 60px 20px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out;
-    z-index: 999;
+/* ---- Optional: keep desktop-only ---- */
+@media screen and (max-width: 1024px) {
+  #navbar { display: none; } /* hide completely on mobile */
 }
-.mobile-menu.show {
-  transform: translateX(0);
-}
-
-.mobile-menu ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.mobile-menu a {
-  text-decoration: none;
-  color: white;
-  font-weight: 500;
-}
-.nav-actions a { display: inline-flex; align-items: center; }
-
-
-
 /* --- Hero Section --- */
 .hero {
   min-height: 70vh;
@@ -910,13 +899,34 @@ html {
   display: none;
 }
 
-/* Styles for the buttons and containers to be toggled */
-.mode-container {
-  transition: opacity 0.3s ease-in-out;
-}
-/* Hides the buttons by default on larger screens (desktops) */
-.mobile-auth-buttons {
-  display: none;
+.export-buttons {
+  display: flex; /* Use flexbox to align the buttons */
+  gap: 1rem;     /* Add space between the buttons */
+  justify-content: center; /* Center the buttons horizontally */
+  align-items: center;     /* Center the buttons vertically */
+  flex-wrap: wrap;         /* Allow buttons to wrap to the next line if needed */
 }
 
-/* This media query applies styles only for screen sizes of 768px and below (typical for mobile) */
+/* Basic styling for the buttons */
+.export-btn {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  background-color: #007bff;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.export-btn:hover {
+  background-color: #0056b3;
+}
+
+
+/*
+* Use a media query to target only mobile screen sizes.
+* The `max-width` property ensures this style only applies to
+* screens 767px or narrower.
+*/
