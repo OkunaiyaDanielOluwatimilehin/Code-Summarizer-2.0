@@ -331,3 +331,95 @@
     margin: 5px 0;
   }
 }
+
+@media (min-width: 769px) {
+  .mobile-menu {
+      display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .export-btn{
+    display: none;
+  }
+  #nav-toggle{
+    display: none;
+  }
+}
+@media screen and (max-width: 768px) {
+    .mobile-auth-buttons {
+        display: block; /* The parent container can also be a simple block */
+        margin-bottom: 2px;
+    }
+    
+    .mobile-auth-buttons ul {
+        list-style: none; /* Removes the bullet points */
+        padding: 0;
+        margin: 0;
+    }
+
+    .mobile-auth-buttons li {
+        display: block; /* This is the key change to force stacking */
+        margin-bottom: 10px; /* Adds space between each button */
+    }
+
+    /* Style for the links to fill their container */
+    .mobile-auth-buttons li a {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+  /* Style for the parent list items to ensure stacking */
+  .mobile-auth-buttons li {
+      display: block;
+      margin-bottom: 15px; /* Adds space between each button */
+  }
+
+  /* Styling for the main 'Sign Up' button */
+  .btn-primary-mobile {
+      display: block; /* Makes the link fill the full width */
+      background-color: var(--color-primary); /* A nice blue color */
+      color: #fff;
+      padding: 20px 100px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+      transition: background-color 0.3s ease;
+  }
+
+  /* Hover effect for the 'Sign Up' button */
+  .btn-primary-mobile:hover,
+  .btn-primary-mobile:focus {
+      background-color: var(--color-dark-bg); /* A darker shade on hover */
+  }
+
+  /* Styling for the secondary 'Login' button */
+  .btn-login-mobile {
+      display: block; /* Makes the link fill the full width */
+      background-color: transparent;
+      color: white;
+      padding: 20px 100px; /* Increased padding to make the button bigger */
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      border: 2px solid white;
+      text-align: center;
+      transition: all 0.3s ease;
+      width: 100%;
+  }
+
+  /* Hover effect for the 'Login' button */
+  .btn-login-mobile:hover,
+  .btn-login-mobile:focus {
+      background-color: var(--color-hover);
+      color: #fff;
+      border: none;
+  }
+}
+

@@ -160,18 +160,34 @@ html {
 
 /* ---- Mobile ---- */
 .nav-toggle {
-  display: none;
-  font-size: 1.8rem;
+  display: none; /* Hide on larger screens */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000; /* Ensure it's on top of other content */
   background: none;
   border: none;
-  color: white;
+  color: #fff;
+  font-size: 2rem;
   cursor: pointer;
 }
+
 .mobile-menu {
-  display: none;
-  background: #0a0a20;
-  padding: 20px;
+  position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background-color: var(--color-background-dark);
+    padding: 60px 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
 }
+.mobile-menu.show {
+  transform: translateX(0);
+}
+
 .mobile-menu ul {
   list-style: none;
   display: flex;
@@ -424,21 +440,6 @@ html {
   word-wrap: break-word;
   margin-bottom: 1rem;
 }
-
-.copy-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: #007bff;
-  color: var(--color-text-light);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.3s ease;
-}
-.copy-btn:hover { background-color: #0056b3; }
 
 /* --- Counter Section --- */
 .counter-section {
@@ -901,13 +902,21 @@ html {
   font-size: 0.9rem;
   border-radius: 6px;
 }
+.show {
+  display: flex;
+}
 
+.hidden {
+  display: none;
+}
 
+/* Styles for the buttons and containers to be toggled */
+.mode-container {
+  transition: opacity 0.3s ease-in-out;
+}
+/* Hides the buttons by default on larger screens (desktops) */
+.mobile-auth-buttons {
+  display: none;
+}
 
-
-
-
-
-
-
-
+/* This media query applies styles only for screen sizes of 768px and below (typical for mobile) */
