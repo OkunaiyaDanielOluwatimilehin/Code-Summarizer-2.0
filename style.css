@@ -895,6 +895,15 @@ html {
   box-shadow: 0 4px 12px rgba(255, 76, 76, 0.2); /* matches red accent */
 }
 
+.summary-output button {
+  margin: 5px 5px 0 0;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+
+
+
 
 
 
