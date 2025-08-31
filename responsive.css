@@ -41,7 +41,7 @@
     font-size: 1.8rem;
   }
   .nav-actions {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -70,8 +70,10 @@
   #navbar {
     padding: 15px 20px;
   }
-  #navbar .nav-links,
-  #navbar .nav-actions {
+  #navbar{
+    display: flex;
+  }
+  .nav-links{
     display: none;
   }
   

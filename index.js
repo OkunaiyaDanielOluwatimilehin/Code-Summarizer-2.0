@@ -14,32 +14,12 @@ function downloadFile(content, filename, mimeType) {
   URL.revokeObjectURL(url);
 }
 
-// --- Mobile Auth Buttons ---
-function insertMobileAuthButtons() {
-  const authContainer = document.querySelector('.auth-button');
-  if (!authContainer) return;
-
-  let existing = authContainer.querySelector('.mobile-auth-buttons');
-  if (window.innerWidth < 1024) {
-    if (!existing) {
-      const div = document.createElement('div');
-      div.className = 'mobile-auth-buttons';
-      div.innerHTML = `
-        <ul>
-          <a href="./auth/login.html" class="btn-login-mobile">Login</a>
-          <a href="./auth/signup.html" class="btn-primary-mobile">Sign Up</a>
-        </ul>`;
-      authContainer.appendChild(div);
-    }
-  } else if (existing) {
-    existing.remove();
-  }
-}
-
-// --- Main App ---
+// --- Main application logic ---
 document.addEventListener("DOMContentLoaded", async () => {
+  // --- Initialize Services ---
   await Counter.init();
 
+  // --- Element References ---
   const elements = {
     typewriterText: document.getElementById("typewriter-text"),
     getStartedButton: document.getElementById("getStartedButton"),
@@ -53,165 +33,253 @@ document.addEventListener("DOMContentLoaded", async () => {
     companiesCounter: document.getElementById('companies-counter'),
     counterSection: document.querySelector('.counter-section'),
     faqItems: document.querySelectorAll('.faq-item'),
+    mobileMenu: document.querySelector(".mobile-menu"),
     avatarButton: document.getElementById('avatarButton'),
   };
 
-  insertMobileAuthButtons();
-  window.addEventListener("resize", insertMobileAuthButtons);
-
-  // --- Result Display ---
+  // --- Utility Functions ---
   function showResult(text, isError = false) {
-    const message = isError ? `<p style="color:red;">${text}</p>` : `<p>${text}</p>`;
+    const message = isError ? `<p style="color: red;">${text}</p>` : `<p>${text}</p>`;
     elements.resultBox.innerHTML = `
       <div class="summary-output">
         ${message}
-        ${!isError ? `
+        ${isError ? '' : `
           <div class="export-buttons">
             <button id="exportTxtBtn" class="export-btn">Export as .txt</button>
             <button id="exportReadmeBtn" class="export-btn">Export as README</button>
           </div>
-          <button id="copySummaryBtn" class="copy-btn">Copy</button>
-        ` : ''}
-      </div>`;
+        `}
+      </div>
+    `;
     elements.resultBox.style.display = "block";
     elements.resultBox.scrollIntoView({ behavior: "smooth" });
+  }
 
-    if (!isError) {
-      const summaryText = text;
-      document.getElementById("exportTxtBtn")?.addEventListener("click", () =>
-        downloadFile(summaryText, "summary.txt", "text/plain")
-      );
-      document.getElementById("exportReadmeBtn")?.addEventListener("click", () =>
-        downloadFile(`# Code Summary\n\n${summaryText}`, "README.md", "text/markdown")
-      );
-      const copyBtn = document.getElementById("copySummaryBtn");
-      copyBtn?.addEventListener("click", () => {
-        navigator.clipboard.writeText(summaryText);
-        copyBtn.textContent = "Copied!";
-        setTimeout(() => copyBtn.textContent = "Copy", 2000);
+  function setupExportButtons(summaryText) {
+    const exportTxtBtn = document.getElementById("exportTxtBtn");
+    const exportReadmeBtn = document.getElementById("exportReadmeBtn");
+
+    if (exportTxtBtn) {
+      exportTxtBtn.addEventListener("click", () => downloadFile(summaryText, "summary.txt", "text/plain"));
+    }
+
+    if (exportReadmeBtn) {
+      exportReadmeBtn.addEventListener("click", () => {
+        const readmeContent = `# Code Summary\n\n${summaryText}`;
+        downloadFile(readmeContent, "README.md", "text/markdown");
       });
     }
   }
 
-  // --- Summarize (File or URL) ---
-  async function summarize({ fileContent, url }) {
-    if (fileContent && !Counter.canUpload()) return;
+  // --- Function to handle all file-related logic ---
+  async function handleFileUpload() {
+    if (!Counter.canUpload()) return;
 
-    const button = fileContent ? elements.uploadButton : elements.urlButton;
-    const originalText = button.textContent;
-    button.textContent = "Processing...";
-    button.disabled = true;
-    showResult(fileContent ? "⏳ Summarizing file..." : "⏳ Summarizing link...");
+    const file = elements.codeFile.files[0];
+    if (!file) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const originalButtonText = elements.uploadButton.textContent;
+    elements.uploadButton.textContent = "Processing...";
+    elements.uploadButton.disabled = true;
 
     try {
-      const response = await fetch(fileContent ? '/api/summarize' : '/api/summarize-link.js', {
+      const fileContent = await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.readAsText(file);
+      });
+
+      const response = await fetch('/api/summarize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fileContent ? { fileContent } : { url })
+        body: JSON.stringify({ fileContent })
       });
+
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Server error.");
+      if (!response.ok) throw new Error(data.message || 'Server error.');
 
       showResult(data.summary);
-    } catch (err) {
-      console.error(err);
+      setupExportButtons(data.summary); // Pass summaryText to setup function
+
+    } catch (error) {
+      console.error("Error summarizing code:", error);
       showResult("❌ Failed to get summary. Please try again.", true);
     } finally {
-      button.textContent = originalText;
-      button.disabled = false;
-      if (fileContent) elements.codeFile.value = "";
+      elements.uploadButton.textContent = originalButtonText;
+      elements.uploadButton.disabled = false;
+      elements.codeFile.value = "";
     }
   }
 
-  elements.uploadButton?.addEventListener("click", () => {
-    const file = elements.codeFile.files[0];
-    if (!file) return alert("Please select a file first.");
-    const reader = new FileReader();
-    reader.onload = e => summarize({ fileContent: e.target.result });
-    reader.readAsText(file);
-  });
-
-  elements.urlButton?.addEventListener("click", () => {
+  // --- Function to handle all URL-related logic ---
+  async function handleUrlSummary() {
     const url = elements.urlInput.value.trim();
-    if (!url) return showResult("⚠️ Please enter a valid link.", true);
-    summarize({ url });
+    if (!url) {
+      showResult("⚠️ Please enter a valid link.", true);
+      return;
+    }
+
+    const originalButtonText = elements.urlButton.textContent;
+    elements.urlButton.textContent = "Processing...";
+    elements.urlButton.disabled = true;
+    showResult("⏳ Summarizing link...");
+
+    try {
+      const response = await fetch('/api/summarize-link.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Server error.');
+
+      showResult(data.summary);
+      setupExportButtons(data.summary); // Pass summaryText to setup function
+
+    } catch (error) {
+      console.error("Error summarizing link:", error);
+      showResult("❌ Failed to get summary. Please try again.", true);
+    } finally {
+      elements.urlButton.textContent = originalButtonText;
+      elements.urlButton.disabled = false;
+    }
+  }
+
+  // --- Event Listeners ---
+  elements.getStartedButton.addEventListener("click", () => {
+    elements.getStartedButton.style.display = "none";
+    elements.uploadBox.classList.add("show");
   });
 
-  elements.codeFile?.addEventListener("change", () => {
+  elements.uploadButton.addEventListener("click", handleFileUpload);
+  elements.codeFile.addEventListener("change", () => {
     elements.uploadButton.textContent = elements.codeFile.files.length
       ? `Upload & Process (${elements.codeFile.files[0].name})`
       : "Upload & Process";
   });
 
-  elements.closeUploadBox?.addEventListener("click", () => {
+  elements.closeUploadBox.addEventListener("click", () => {
     elements.uploadBox.classList.remove("show");
     elements.getStartedButton.style.display = "inline-block";
     elements.resultBox.textContent = "";
     elements.resultBox.style.display = "none";
   });
 
-  elements.getStartedButton?.addEventListener("click", () => {
-    elements.getStartedButton.style.display = "none";
-    elements.uploadBox.classList.add("show");
-  });
-
-  elements.avatarButton?.addEventListener('click', e => {
-    e.preventDefault();
-    localStorage.removeItem('authToken');
-    window.location.href = '/';
-  });
-
-  // --- Typewriter Effect ---
-  if (elements.typewriterText) {
-    const phrases = [
-      "Powered by cutting-edge AI.",
-      "Making code accessible to everyone.",
-      "Your ultimate code understanding companion.",
-      "Efficient, accurate, and instant."
-    ];
-    let phraseIndex = 0, charIndex = 0, isDeleting = false;
-    const typingSpeed = 100, deletingSpeed = 50, delayBetweenPhrases = 1500;
-
-    const typeWriter = () => {
-      const current = phrases[phraseIndex];
-      elements.typewriterText.textContent = isDeleting
-        ? current.substring(0, charIndex--)
-        : current.substring(0, ++charIndex);
-
-      if (!isDeleting && charIndex === current.length) {
-        isDeleting = true;
-        setTimeout(typeWriter, delayBetweenPhrases);
-      } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        setTimeout(typeWriter, 500);
-      } else {
-        setTimeout(typeWriter, isDeleting ? deletingSpeed : typingSpeed);
-      }
-    };
-    typeWriter();
+  if (elements.urlButton) {
+    elements.urlButton.addEventListener("click", handleUrlSummary);
   }
 
-  // --- FAQ Toggle ---
+  if (elements.avatarButton) {
+    elements.avatarButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('authToken');
+      window.location.href = '/';
+    });
+  }
+
+  // --- Typewriter Effect Logic ---
+  const phrases = [
+    "Powered by cutting-edge AI.",
+    "Making code accessible to everyone.",
+    "Your ultimate code understanding companion.",
+    "Efficient, accurate, and instant."
+  ];
+  let phraseIndex = 0, charIndex = 0, isDeleting = false;
+  const typingSpeed = 100, deletingSpeed = 50, delayBetweenPhrases = 1500;
+
+  function typeWriterEffect() {
+    const currentPhrase = phrases[phraseIndex];
+    elements.typewriterText.textContent = isDeleting ?
+      currentPhrase.substring(0, charIndex--) :
+      currentPhrase.substring(0, ++charIndex);
+
+    if (!isDeleting && charIndex === currentPhrase.length) {
+      isDeleting = true;
+      setTimeout(typeWriterEffect, delayBetweenPhrases);
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      setTimeout(typeWriterEffect, 500);
+    } else {
+      setTimeout(typeWriterEffect, isDeleting ? deletingSpeed : typingSpeed);
+    }
+  }
+  if (elements.typewriterText) typeWriterEffect();
+
+  // --- FAQ toggle ---
   elements.faqItems.forEach(item => {
     const question = item.querySelector('.faq-question');
-    question?.addEventListener('click', () => {
-      elements.faqItems.forEach(i => i !== item && i.classList.remove('active'));
+    question.addEventListener('click', () => {
+      elements.faqItems.forEach(i => { if (i !== item) i.classList.remove('active'); });
       item.classList.toggle('active');
     });
   });
 
-  // --- Company Counter ---
-  const target = 100;
-  const duration = 2000;
-  if (elements.companiesCounter) {
-    let start = 0;
-    const increment = target / (duration / 16);
-    const animate = () => {
-      start += increment;
-      elements.companiesCounter.textContent = Math.min(Math.floor(start), target);
-      if (start < target) requestAnimationFrame(animate);
-    };
-    animate();
+// --- Company counter animation outside DOMContentLoaded ---
+const companiesCounterElement = document.getElementById('companies-counter');
+const targetCount = 100;
+const duration = 2000;
+
+function animateCounter(element, target, duration) {
+  let start = 0;
+  const increment = target / (duration / 16);
+  const animate = () => {
+    start += increment;
+    element.textContent = start < target ? Math.ceil(start) : target;
+    if (start < target) requestAnimationFrame(animate);
+  };
+  animate();
+}
+
+const counterSection = document.querySelector('.counter-section');
+if (counterSection && companiesCounterElement) {
+  const counterObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(companiesCounterElement, targetCount, duration);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counterObserver.observe(counterSection);
+}
+function insertMobileAuthButtons() {
+  // Only insert on mobile
+  if (window.innerWidth < 1024) {
+      // Check if already added
+      if (!document.querySelector('.mobile-auth-buttons')) {
+          const authContainer = document.querySelector('.auth-button');
+          if (!authContainer) return; // safety check
+
+          // Create container div
+          const div = document.createElement('div');
+          div.className = 'mobile-auth-buttons';
+
+          // Add the inner HTML
+          div.innerHTML = `
+              <ul>
+                  <a href="./auth/login.html" class="btn-login-mobile">Login</a>
+                  <a href="./auth/signup.html" class="btn-primary-mobile">Sign Up</a>
+              </ul>
+          `;
+
+          // Append to the auth-button container
+          authContainer.appendChild(div);
+      }
+  } else {
+      // Remove on desktop
+      const existing = document.querySelector('.mobile-auth-buttons');
+      if (existing) existing.remove();
   }
+}
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', insertMobileAuthButtons);
+
+// Run on window resize
+window.addEventListener('resize', insertMobileAuthButtons);
 });

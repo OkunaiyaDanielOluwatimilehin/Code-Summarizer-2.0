@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Using a more cost-effective model for this task
 
-    const prompt = `Here is a summary of what the code is about: ${fileContent}`;
+    const prompt = `YYou are a world-class software engineer and technical writer. Your task is to provide a comprehensive, yet brief summary of the code provided. Write a single, coherent paragraph of 3-4 sentences that explains the code's core purpose, its primary functionalities, and the main technologies or libraries used. Do not use bullet points. Bold the most important keywords and concepts to make them stand out.: ${fileContent}`;
 
     // Generate content from the prompt
     const result = await model.generateContent(prompt);

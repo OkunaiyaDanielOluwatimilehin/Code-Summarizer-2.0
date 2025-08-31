@@ -8,6 +8,7 @@ const supabase = createClient(
 document.addEventListener('DOMContentLoaded', async () => {
   const usernameLabel = document.getElementById('usernameLabel');
   const avatarButton = document.getElementById('avatarButton');
+  const navBar = document.getElementById('navBar');
   
   // Desktop Selectors
   const navActions = document.querySelector('.nav-actions');
