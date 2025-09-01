@@ -1,23 +1,18 @@
+
+
+:root {
+  /* Define global color palette */
+  --color-primary: #FF4C4C;
+  --color-dark-bg: #0a0a20;
+  --color-deep-bg: #020024;
+  --color-text-light: white;
+  --color-text-faint: #c0c0c0;
+  --color-accent: #a0a0ff;
+  --color-hover: #e03552;
+}
 /* ===== MOBILE RESPONSIVE ===== */
 @media screen and (max-width: 768px) {
   /* --- Navbar --- */
-  #navbar {
-    flex-direction: column;
-    padding: 15px;
-    gap: 15px;
-  }
-  .nav-links {
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
-    width: 100%;
-  }
-  .nav-actions {
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
   /* --- Hero Section --- */
   .hero {
     padding: 80px 15px;
@@ -36,7 +31,8 @@
   }
   .btn {
     width: 100%;
-    max-width: 250px;
+    max-width: 300px;
+    border-radius: 5px;
   }
 
   /* --- Upload Box --- */
@@ -172,4 +168,103 @@
   .github-btn i {
     margin-right: 8px;        /* spacing for GitHub icon */
   }
+}
+
+@media screen and (max-width: 768px){
+  #navbar{
+    display: flex;
+  }
+  .nav-links{
+    display: none;
+  }
+  .nav-actions{
+    display: none !important; 
+  }
+}
+
+@media (max-width: 768px) {
+  /* Styles for the typewriter-container */
+  .typewriter-container {
+      font-size: 1.5rem; /* Larger font for better readability on small screens */
+      font-weight: 700;
+      color: var(--color-accent);
+      white-space: nowrap;
+      overflow: hidden;
+  }
+
+  .typewriter-cursor {
+      font-size: 2rem;
+      color: var(--primary-color);
+      /* Animation for the blinking cursor */
+      animation: blink-caret .75s step-end infinite;
+  }
+
+  /* Styles for the mobile buttons */
+  ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column; /* Stacks the buttons vertically */
+      gap: 1rem; /* Adds spacing between the buttons */
+      width: 100%;
+      max-width: 20rem; 
+      /* margin-top: 2rem; */
+  }
+
+  .btn-login-mobile,
+  .btn-primary-mobile {
+      display: block;
+      width: 100%;
+      padding: 1rem 7rem;
+      font-weight: 400;
+      font-size: 1.2rem;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .btn-login-mobile {
+      background-color: transparent;
+      color: white;
+      border: 1px solid #d1d5db;
+  }
+
+  .btn-primary-mobile {
+      background-color: #2563eb;
+      color: #ffffff;
+      border: 1px solid #2563eb;
+      margin-bottom: 10px;
+      margin-top: 10px;
+  }
+  .btn-login-mobile:hover {
+      background-color: var(--color-hover);
+      color: white;
+      border: none;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 75, 92, 0.4);
+  }
+  .btn-primary-mobile:hover {
+      background-color: var(--color-hover);
+      color: #ffffff;
+      border: none;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 75, 92, 0.4);
+  }
+  .username-label{
+    /* Prevents the text from wrapping onto a new line. */
+    white-space: nowrap;
+    /* Prevents the element from shrinking when space is limited. */
+    flex-shrink: 0;
+  }
+  .avatar-button{
+    margin-left: 3rem;
+  }
+}
+
+/* Keyframes for the blinking cursor animation */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #6b7280; }
 }
